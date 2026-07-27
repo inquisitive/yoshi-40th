@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+<title>Yoshi — 40th Birthday</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@200;300;400&family=Shippori+Mincho:wght@400;500&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+
+<!-- Firebase -->
+<script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js';
+  import { getDatabase, ref, set, onValue, get } from 'https://www.gstatic.com/firebasejs/12.15.0/firebase-database.js';
+
+  const firebaseConfig = {
+    apiKey:            "AIzaSyCX5fuPWfFfH0EZXX2WNSbT66KpKIQiNSw",
+    authDomain:        "ruyiandnelson.firebaseapp.com",
+    databaseURL:       "https://ruyiandnelson-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId:         "ruyiandnelson",
+    storageBucket:     "ruyiandnelson.firebasestorage.app",
+    messagingSenderId: "451102133371",
+    appId:             "1:451102133371:web:4103d7019d8106b55ba6de"
+  };
+
+  let db = null;
+  try {
+    const app = initializeApp(firebaseConfig, 'yoshi40');
+    db = getDatabase(app);
+  } catch(e){ console.warn('Firebase init:', e); }
+
+  window._fb_yoshi = {
+    ready: !!db, db, ref, set, onValue, get,
+    write(path, data){
+      if(!db) return;
+      setSyncStatus('saving');
+      set(ref(db, 'yoshi40/' + path), data)
+        .then(()=> setSyncStatus('saved'))
+        .catch(()=> setSyncStatus('error'));
+    },
+    subscribe(path, cb){
+      if(!db) return;
+      onValue(ref(db, 'yoshi40/' + path), snap => cb(snap.val()));
+    }
+  };
+
+  window.addEventListener('load', ()=>{
+    if(db && typeof setSyncStatus === 'function')
+      setTimeout(()=> setSyncStatus('saved','✓ Database connected'), 900);
+  });
+</script>
+
+<style>
+:root {
+  --ink:       #0f1520;
+  --navy:      #1a2540;
+  --navy-mid:  #243358;
+  --silver:    #a8b4c8;
+  --silver-lt: #d4dce8;
+  --gold-soft: #c8a96e;
+  --cream:     #f2f0eb;
+  --paper:     #f8f7f4;
+  --border:    rgba(168,180,200,0.2);
+  --border-md: rgba(168,180,200,0.45);
+}
+
+* { box-sizing: border-box; margin:0; padding:0; }
+html { scroll-behavior: smooth; }
+body { font-family:'Jost',sans-serif; background:var(--paper); color:var(--ink); font-weight:300; line-height:1.7; }
+
+/* ── SYNC ── */
+#sync-bar {
+  position:fixed; bottom:16px; right:16px; z-index:600;
+  display:flex; align-items:center; gap:8px;
+  padding:7px 14px; border-radius:20px;
+  font-family:'Jost',sans-serif; font-size:11px; letter-spacing:0.07em;
+  box-shadow:0 2px 16px rgba(0,0,0,0.18);
+  transition:all 0.3s; pointer-events:none; opacity:0;
+}
+#sync-bar.show { opacity:1; }
+#sync-bar.saving { background:#1a2540; color:#a8b4c8; border:0.5px solid rgba(168,180,200,0.3); }
+#sync-bar.saved  { background:#0f2818; color:#6abf8a; border:0.5px solid rgba(100,180,130,0.3); }
+#sync-bar.error  { background:#200f0f; color:#bf6a6a; border:0.5px solid rgba(180,100,100,0.3); }
+.sync-dot { width:5px; height:5px; border-radius:50%; }
+#sync-bar.saving .sync-dot { background:#a8b4c8; animation:pulse 1s infinite; }
+#sync-bar.saved  .sync-dot { background:#6abf8a; }
+#sync-bar.error  .sync-dot { background:#bf6a6a; }
+@keyframes pulse { 0%,100%{opacity:0.3} 50%{opacity:1} }
+
+/* ── PASSWORD GATE ── */
+#pw-gate {
+  position:fixed; inset:0; z-index:9999;
+  background:var(--ink);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  padding:40px 24px; text-align:center;
+}
+.gate-mon {
+  width:80px; height:80px; margin:0 auto 28px;
+  opacity:0.15;
+}
+.gate-mon svg { width:100%; height:100%; }
+.gate-name {
+  font-family:'Shippori Mincho',serif;
+  font-size:clamp(40px,8vw,72px);
+  font-weight:400;
+  color:#f2f0eb;
+  letter-spacing:0.06em;
+  margin-bottom:4px;
+}
+.gate-kanji {
+  font-family:'Noto Serif JP',serif;
+  font-size:13px; font-weight:200;
+  color:var(--silver); letter-spacing:0.4em;
+  margin-bottom:32px;
+}
+.gate-rule { width:32px; height:0.5px; background:var(--border-md); margin:0 auto 32px; }
+.gate-label { font-size:10px; letter-spacing:0.3em; text-transform:uppercase; color:var(--silver); margin-bottom:12px; }
+.gate-input-wrap {
+  display:flex; overflow:hidden;
+  border:0.5px solid var(--border-md); border-radius:4px;
+  background:rgba(255,255,255,0.04);
+  max-width:300px; width:100%;
+}
+#pw-input {
+  flex:1; border:none; outline:none; background:transparent;
+  padding:12px 16px;
+  font-family:'Jost',sans-serif; font-size:14px; font-weight:300;
+  color:var(--cream); letter-spacing:0.12em;
+}
+#pw-input::placeholder { color:rgba(168,180,200,0.4); letter-spacing:0.05em; }
+#pw-btn {
+  background:var(--navy-mid); border:none;
+  padding:12px 20px; cursor:pointer;
+  color:var(--silver-lt);
+  font-family:'Jost',sans-serif; font-size:10px; letter-spacing:0.18em; text-transform:uppercase;
+  transition:background 0.2s; white-space:nowrap;
+}
+#pw-btn:hover { background:#2d4070; }
+#pw-error { font-size:11px; color:#bf6a6a; margin-top:10px; opacity:0; transition:opacity 0.3s; }
+#pw-error.show { opacity:1; }
+#site-content { display:none; }
+
+/* ── HERO ── */
+.hero {
+  min-height:100vh; display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  text-align:center; padding:80px 24px;
+  background:var(--ink); position:relative; overflow:hidden;
+}
+/* Subtle washi paper texture overlay */
+.hero::before {
+  content:'';
+  position:absolute; inset:0;
+  background:
+    radial-gradient(ellipse 100% 70% at 50% 0%, rgba(26,37,64,0.8) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 20% 100%, rgba(168,180,200,0.04) 0%, transparent 50%),
+    radial-gradient(ellipse 40% 60% at 80% 50%, rgba(200,169,110,0.03) 0%, transparent 50%);
+  pointer-events:none;
+}
+/* Japanese mon (family crest) SVG background */
+.hero-mon {
+  width:220px; height:220px;
+  opacity:0.06; margin-bottom:-40px;
+  animation: heroFade 2s ease both;
+}
+.hero-age {
+  font-family:'Noto Serif JP',serif;
+  font-size:11px; font-weight:200;
+  letter-spacing:0.5em; text-transform:uppercase;
+  color:var(--gold-soft); margin-bottom:16px;
+  animation:fadeUp 1s ease 0.2s both;
+}
+.hero-name {
+  font-family:'Shippori Mincho',serif;
+  font-size:clamp(64px,12vw,120px);
+  font-weight:400; letter-spacing:0.08em;
+  color:var(--cream); line-height:1;
+  animation:fadeUp 1s ease 0.35s both;
+}
+.hero-kanji {
+  font-family:'Noto Serif JP',serif;
+  font-size:clamp(18px,3vw,26px); font-weight:200;
+  color:var(--silver); letter-spacing:0.5em;
+  margin-top:12px;
+  animation:fadeUp 1s ease 0.5s both;
+}
+.hero-rule {
+  width:0.5px; height:60px;
+  background:linear-gradient(to bottom, transparent, var(--silver), transparent);
+  margin:36px auto;
+  animation:fadeUp 1s ease 0.6s both;
+}
+.hero-date {
+  font-family:'Jost',sans-serif; font-weight:200;
+  font-size:13px; letter-spacing:0.35em; text-transform:uppercase;
+  color:var(--silver); margin-bottom:6px;
+  animation:fadeUp 1s ease 0.7s both;
+}
+.hero-venue {
+  font-family:'Jost',sans-serif; font-weight:300;
+  font-size:11px; letter-spacing:0.25em; text-transform:uppercase;
+  color:var(--gold-soft);
+  animation:fadeUp 1s ease 0.8s both;
+}
+.hero-scroll {
+  position:absolute; bottom:32px; left:50%; transform:translateX(-50%);
+  display:flex; flex-direction:column; align-items:center; gap:8px;
+  animation:fadeUp 1s ease 1s both;
+}
+.hero-scroll span { font-size:9px; letter-spacing:0.25em; text-transform:uppercase; color:var(--silver); opacity:0.5; }
+.scroll-line { width:0.5px; height:36px; background:linear-gradient(to bottom, var(--silver), transparent); }
+
+@keyframes fadeUp { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
+@keyframes heroFade { from{opacity:0} to{opacity:0.06} }
+
+/* ── NAV ── */
+nav {
+  position:sticky; top:0; z-index:100;
+  background:rgba(15,21,32,0.94); backdrop-filter:blur(14px);
+  border-bottom:0.5px solid var(--border);
+  padding:0 20px;
+  display:flex; align-items:center; justify-content:center;
+  flex-wrap:wrap; gap:0;
+  overflow-x:auto;
+}
+.nav-link {
+  font-size:9.5px; letter-spacing:0.22em; text-transform:uppercase;
+  color:var(--silver); text-decoration:none;
+  padding:14px 16px; transition:color 0.2s;
+  position:relative; white-space:nowrap;
+}
+.nav-link:hover { color:var(--cream); }
+.nav-link.active { color:var(--cream); }
+.nav-link.active::after {
+  content:''; position:absolute; bottom:0; left:16px; right:16px;
+  height:0.5px; background:var(--gold-soft);
+}
+.nav-ext {
+  color:var(--gold-soft);
+  border:0.5px solid rgba(200,169,110,0.35);
+  border-radius:3px; margin-left:6px;
+  padding:6px 12px; font-size:9px;
+}
+.nav-ext:hover { background:rgba(200,169,110,0.08); color:var(--gold-soft); }
+
+/* ── SECTIONS ── */
+.section-wrap { max-width:860px; margin:0 auto; padding:80px 24px; }
+.section-alt { background:var(--ink); }
+.section-alt .section-wrap { color:var(--cream); }
+.section-label {
+  font-size:9px; letter-spacing:0.35em; text-transform:uppercase;
+  color:var(--gold-soft); margin-bottom:10px;
+}
+.section-title {
+  font-family:'Shippori Mincho',serif;
+  font-size:clamp(28px,4vw,44px); font-weight:400;
+  letter-spacing:0.04em; line-height:1.2;
+  margin-bottom:36px;
+}
+.section-alt .section-title { color:var(--cream); }
+em.gold { font-style:italic; color:var(--gold-soft); }
+
+/* ── DETAILS GRID ── */
+.details-grid {
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
+  gap:0.5px; background:var(--border-md);
+  border:0.5px solid var(--border-md); border-radius:6px; overflow:hidden;
+  margin-bottom:48px;
+}
+.detail-cell { background:var(--paper); padding:22px 18px; }
+.section-alt .detail-cell { background:var(--navy); }
+.detail-cell .lbl { font-size:9px; letter-spacing:0.25em; text-transform:uppercase; color:var(--gold-soft); margin-bottom:5px; }
+.detail-cell .val { font-family:'Shippori Mincho',serif; font-size:17px; color:var(--ink); line-height:1.3; }
+.section-alt .detail-cell .val { color:var(--cream); }
+.detail-cell .sub { font-size:11px; color:var(--silver); margin-top:3px; }
+
+/* ── AGENDA ── */
+.agenda-list { list-style:none; }
+.agenda-item {
+  display:flex; gap:20px; padding:14px 0;
+  border-bottom:0.5px solid var(--border);
+  align-items:flex-start; position:relative;
+}
+.agenda-item:last-child { border-bottom:none; }
+.ag-time {
+  font-family:'Shippori Mincho',serif;
+  font-size:17px; color:var(--gold-soft); min-width:80px; flex-shrink:0;
+}
+.ag-event { font-size:13px; font-weight:400; color:var(--cream); margin-bottom:2px; }
+.ag-note  { font-size:11px; color:var(--silver); }
+.ag-actions {
+  display:flex; gap:4px; opacity:0; transition:opacity 0.15s;
+  flex-shrink:0; margin-left:auto; padding-top:2px;
+}
+.agenda-item:hover .ag-actions { opacity:1; }
+.ag-btn {
+  background:none; border:0.5px solid var(--border-md);
+  border-radius:3px; padding:3px 8px;
+  font-family:'Jost',sans-serif; font-size:9px; color:var(--silver);
+  cursor:pointer; transition:all 0.15s; white-space:nowrap;
+}
+.ag-btn:hover { color:var(--gold-soft); border-color:var(--gold-soft); }
+.ag-btn.del:hover { color:#bf6a6a; border-color:rgba(180,100,100,0.4); }
+.drag-handle { cursor:grab; color:var(--silver); opacity:0.25; font-size:14px; flex-shrink:0; padding-top:3px; user-select:none; }
+.agenda-item:hover .drag-handle { opacity:0.6; }
+.ag-edit-row {
+  display:flex; gap:8px; flex-wrap:wrap;
+  padding:10px 0 8px; border-bottom:0.5px solid var(--border);
+  align-items:flex-start;
+}
+.ag-edit-row input {
+  border:0.5px solid var(--border-md); border-radius:3px;
+  padding:7px 10px;
+  font-family:'Jost',sans-serif; font-size:12px; font-weight:300;
+  color:var(--cream); background:var(--navy-mid); outline:none;
+}
+.ag-edit-row input:focus { border-color:var(--gold-soft); }
+.ag-edit-row .t-time { width:88px; flex-shrink:0; }
+.ag-edit-row .t-event { flex:1; min-width:140px; }
+.ag-edit-row .t-note  { flex:2; min-width:160px; color:var(--silver); }
+
+/* ── MENU ── */
+.menu-card {
+  border:0.5px solid var(--border-md); border-radius:6px; overflow:hidden;
+  max-width:640px; margin:0 auto;
+  background:var(--navy);
+}
+.menu-header {
+  padding:28px 32px 20px; text-align:center;
+  border-bottom:0.5px solid var(--border);
+  background:rgba(255,255,255,0.02);
+}
+.menu-header-name {
+  font-family:'Shippori Mincho',serif; font-size:22px;
+  color:var(--cream); letter-spacing:0.08em;
+}
+.menu-header-sub { font-size:10px; letter-spacing:0.25em; text-transform:uppercase; color:var(--gold-soft); margin-top:6px; }
+.menu-body { padding:24px 32px 28px; }
+.menu-course { margin-bottom:20px; }
+.menu-course:last-child { margin-bottom:0; }
+.course-lbl { font-size:9px; letter-spacing:0.25em; text-transform:uppercase; color:var(--gold-soft); margin-bottom:6px; }
+.course-items { font-size:12px; color:var(--silver-lt); line-height:1.8; }
+.course-items .jp { font-family:'Noto Serif JP',serif; font-weight:200; font-size:13px; color:var(--silver); display:block; margin-bottom:2px; }
+.menu-note { font-size:11px; color:var(--silver); text-align:center; margin-top:14px; opacity:0.7; }
+.placeholder-badge {
+  display:inline-block; font-size:9px; letter-spacing:0.15em; text-transform:uppercase;
+  background:rgba(200,169,110,0.1); border:0.5px dashed rgba(200,169,110,0.4);
+  color:var(--gold-soft); padding:2px 8px; border-radius:2px; margin-left:6px;
+  vertical-align:middle;
+}
+
+/* ── SEATING ── */
+.seating-summary {
+  display:flex; gap:24px; flex-wrap:wrap;
+  padding:16px 20px; margin-bottom:24px;
+  background:var(--navy); border:0.5px solid var(--border-md); border-radius:6px;
+}
+.seat-stat { font-size:12px; color:var(--silver); }
+.seat-stat strong { font-family:'Shippori Mincho',serif; font-size:20px; color:var(--gold-soft); font-weight:400; display:block; }
+.seat-controls { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:18px; align-items:center; }
+.seat-controls input[type="text"] {
+  flex:1; min-width:150px;
+  border:0.5px solid var(--border-md); border-radius:3px;
+  padding:10px 13px;
+  font-family:'Jost',sans-serif; font-size:13px; font-weight:300;
+  color:var(--cream); background:var(--navy-mid); outline:none;
+}
+.seat-controls input:focus { border-color:var(--gold-soft); }
+.seat-controls select {
+  border:0.5px solid var(--border-md); border-radius:3px;
+  padding:10px 12px;
+  font-family:'Jost',sans-serif; font-size:12px;
+  color:var(--cream); background:var(--navy-mid); outline:none; cursor:pointer;
+}
+.btn-primary {
+  background:var(--navy-mid); color:var(--silver-lt);
+  border:0.5px solid var(--border-md); padding:10px 18px;
+  border-radius:3px; font-family:'Jost',sans-serif;
+  font-size:10px; letter-spacing:0.15em; text-transform:uppercase;
+  cursor:pointer; transition:all 0.2s; white-space:nowrap;
+}
+.btn-primary:hover { background:#2d4070; border-color:var(--silver); color:var(--cream); }
+.btn-gold {
+  background:var(--gold-soft); color:var(--ink);
+  border:none; padding:10px 18px; border-radius:3px;
+  font-family:'Jost',sans-serif; font-size:10px; letter-spacing:0.15em; text-transform:uppercase;
+  cursor:pointer; transition:background 0.2s; white-space:nowrap; font-weight:400;
+}
+.btn-gold:hover { background:#b8973e; }
+
+.seating-grid {
+  display:grid; grid-template-columns:repeat(auto-fill,minmax(190px,1fr));
+  gap:10px; margin-bottom:28px;
+}
+.seat-card {
+  border:0.5px solid var(--border-md); border-radius:5px; overflow:hidden;
+  background:var(--navy);
+}
+.seat-card.vip { border-color:rgba(200,169,110,0.4); }
+.seat-card-head {
+  padding:10px 14px 8px; border-bottom:0.5px solid var(--border);
+  background:rgba(255,255,255,0.02);
+  display:flex; justify-content:space-between; align-items:center;
+}
+.seat-card.vip .seat-card-head { background:rgba(200,169,110,0.07); }
+.seat-table-name { font-family:'Shippori Mincho',serif; font-size:15px; color:var(--cream); }
+.seat-badge { font-size:10px; color:var(--gold-soft); background:rgba(200,169,110,0.1); padding:2px 7px; border-radius:10px; }
+.seat-badge.full { background:rgba(100,180,130,0.12); color:#6abf8a; }
+.seat-guests-list { padding:8px 14px; min-height:52px; }
+.guest-chip {
+  display:flex; justify-content:space-between; align-items:center;
+  padding:3px 0; border-bottom:0.5px solid var(--border);
+  font-size:12px; color:var(--silver-lt);
+}
+.guest-chip:last-child { border-bottom:none; }
+.rm-btn {
+  background:none; border:none; cursor:pointer;
+  color:var(--silver); opacity:0.35; font-size:14px; line-height:1; padding:0 2px;
+}
+.rm-btn:hover { opacity:1; color:#bf6a6a; }
+.empty-hint { font-size:11px; color:rgba(168,180,200,0.35); font-style:italic; text-align:center; padding:8px 0; }
+
+.unassigned-box { border:0.5px solid var(--border-md); border-radius:5px; overflow:hidden; margin-top:20px; }
+.unassigned-head {
+  padding:10px 14px; background:rgba(255,255,255,0.02);
+  border-bottom:0.5px solid var(--border);
+  display:flex; justify-content:space-between; align-items:center;
+  font-size:9px; letter-spacing:0.2em; text-transform:uppercase; color:var(--gold-soft);
+}
+.unassigned-chips { padding:12px 14px; display:flex; flex-wrap:wrap; gap:6px; min-height:44px; }
+.ua-chip {
+  background:rgba(168,180,200,0.07); border:0.5px solid var(--border-md);
+  border-radius:20px; padding:4px 10px;
+  font-size:12px; color:var(--silver-lt);
+  display:flex; align-items:center; gap:6px;
+}
+.ua-chip select {
+  border:none; background:none;
+  font-family:'Jost',sans-serif; font-size:10px; color:var(--gold-soft);
+  cursor:pointer; outline:none; padding:0;
+}
+
+/* ── REVEAL ── */
+.reveal { opacity:0; transform:translateY(14px); transition:opacity 0.7s ease, transform 0.7s ease; }
+.reveal.visible { opacity:1; transform:translateY(0); }
+
+/* ── FOOTER ── */
+footer {
+  background:var(--ink); text-align:center; padding:60px 24px;
+  border-top:0.5px solid var(--border);
+}
+.footer-name { font-family:'Shippori Mincho',serif; font-size:28px; color:var(--cream); letter-spacing:0.1em; margin-bottom:6px; }
+.footer-kanji { font-family:'Noto Serif JP',serif; font-size:11px; font-weight:200; color:var(--silver); letter-spacing:0.4em; }
+
+@media(max-width:600px){
+  .seating-grid { grid-template-columns:1fr 1fr; }
+  nav { justify-content:flex-start; }
+  .nav-link { padding:12px 10px; font-size:8.5px; }
+  .ag-edit-row .t-note { display:none; }
+}
+</style>
+</head>
+<body>
+
+<div id="sync-bar"><span class="sync-dot"></span><span id="sync-msg">Saving…</span></div>
+
+<!-- PASSWORD GATE -->
+<div id="pw-gate">
+  <div class="gate-mon">
+    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="50" cy="50" r="48" stroke="#a8b4c8" stroke-width="0.8"/>
+      <circle cx="50" cy="50" r="42" stroke="#a8b4c8" stroke-width="0.4"/>
+      <!-- Stylised chrysanthemum mon -->
+      <g stroke="#a8b4c8" stroke-width="0.6" fill="none">
+        <ellipse cx="50" cy="50" rx="8" ry="18"/>
+        <ellipse cx="50" cy="50" rx="8" ry="18" transform="rotate(30 50 50)"/>
+        <ellipse cx="50" cy="50" rx="8" ry="18" transform="rotate(60 50 50)"/>
+        <ellipse cx="50" cy="50" rx="8" ry="18" transform="rotate(90 50 50)"/>
+        <ellipse cx="50" cy="50" rx="8" ry="18" transform="rotate(120 50 50)"/>
+        <ellipse cx="50" cy="50" rx="8" ry="18" transform="rotate(150 50 50)"/>
+      </g>
+      <circle cx="50" cy="50" r="6" stroke="#a8b4c8" stroke-width="0.8"/>
+    </svg>
+  </div>
+  <h1 class="gate-name">Yoshi</h1>
+  <p class="gate-kanji">四十 · FORTIETH</p>
+  <div class="gate-rule"></div>
+  <p class="gate-label">Private · Enter password to continue</p>
+  <div class="gate-input-wrap">
+    <input type="password" id="pw-input" placeholder="Password" autocomplete="off"
+      onkeydown="if(event.key==='Enter')checkPw()">
+    <button id="pw-btn" onclick="checkPw()">Enter</button>
+  </div>
+  <p id="pw-error">Incorrect password. Please try again.</p>
+</div>
+
+<div id="site-content">
+
+<!-- HERO -->
+<div class="hero" id="top">
+  <!-- Chrysanthemum mon -->
+  <svg class="hero-mon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="50" cy="50" r="48" stroke="#a8b4c8" stroke-width="0.5"/>
+    <circle cx="50" cy="50" r="42" stroke="#a8b4c8" stroke-width="0.3"/>
+    <g stroke="#a8b4c8" stroke-width="0.5" fill="none">
+      <ellipse cx="50" cy="50" rx="8" ry="18"/>
+      <ellipse cx="50" cy="50" rx="8" ry="18" transform="rotate(30 50 50)"/>
+      <ellipse cx="50" cy="50" rx="8" ry="18" transform="rotate(60 50 50)"/>
+      <ellipse cx="50" cy="50" rx="8" ry="18" transform="rotate(90 50 50)"/>
+      <ellipse cx="50" cy="50" rx="8" ry="18" transform="rotate(120 50 50)"/>
+      <ellipse cx="50" cy="50" rx="8" ry="18" transform="rotate(150 50 50)"/>
+    </g>
+    <circle cx="50" cy="50" r="6" stroke="#a8b4c8" stroke-width="0.5"/>
+  </svg>
+  <p class="hero-age">Fortieth Birthday · 四十歳</p>
+  <h1 class="hero-name">Yoshi</h1>
+  <p class="hero-kanji">よ し</p>
+  <div class="hero-rule"></div>
+  <p class="hero-date">Friday · 29 August 2025</p>
+  <p class="hero-venue">Regis Caroline Mansion &nbsp;·&nbsp; Private Dinner</p>
+  <div class="hero-scroll"><span>Scroll</span><div class="scroll-line"></div></div>
+</div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#details"  class="nav-link">Details</a>
+  <a href="#agenda"   class="nav-link">Agenda</a>
+  <a href="#seating"  class="nav-link">Seating</a>
+  <a href="#menu"     class="nav-link">Menu</a>
+  <a href="https://docs.google.com/spreadsheets/d/15ciKJKNwc-3JjmP_Us0aZstFDqjn5GMy/edit?usp=sharing" target="_blank" class="nav-link nav-ext">📋 Guest List</a>
+</nav>
+
+<!-- DETAILS -->
+<section id="details">
+  <div class="section-wrap">
+    <div class="reveal">
+      <p class="section-label">The occasion</p>
+      <h2 class="section-title">Evening <em class="gold">details</em></h2>
+    </div>
+    <div class="details-grid reveal">
+      <div class="detail-cell">
+        <div class="lbl">Date</div>
+        <div class="val">Friday<br>29 Aug 2025</div>
+      </div>
+      <div class="detail-cell">
+        <div class="lbl">Arrival</div>
+        <div class="val">6:00 pm</div>
+        <div class="sub">Guests welcomed from 6 pm</div>
+      </div>
+      <div class="detail-cell">
+        <div class="lbl">Dinner begins</div>
+        <div class="val">7:00 pm</div>
+        <div class="sub">Seated service</div>
+      </div>
+      <div class="detail-cell">
+        <div class="lbl">Venue</div>
+        <div class="val">Regis Caroline<br>Mansion</div>
+      </div>
+      <div class="detail-cell">
+        <div class="lbl">Guest of honour</div>
+        <div class="val">Yoshi</div>
+        <div class="sub">四十歳 · Fortieth</div>
+      </div>
+      <div class="detail-cell">
+        <div class="lbl">Tables</div>
+        <div class="val">10 tables</div>
+        <div class="sub">8–10 pax per table · up to 100 guests</div>
+      </div>
+      <div class="detail-cell">
+        <div class="lbl">Dress code</div>
+        <div class="val">Smart casual<br>– elegant</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AGENDA -->
+<div class="section-alt" id="agenda">
+  <div class="section-wrap">
+    <div class="reveal">
+      <p class="section-label" style="color:var(--gold-soft)">Evening programme</p>
+      <h2 class="section-title">Night <em class="gold">agenda</em></h2>
+    </div>
+    <div id="agenda-root"></div>
+  </div>
+</div>
+
+<!-- SEATING -->
+<section id="seating">
+  <div class="section-wrap">
+    <div class="reveal">
+      <p class="section-label">Table allocation</p>
+      <h2 class="section-title">Seating <em class="gold">planner</em></h2>
+      <p style="font-size:13px;color:var(--silver);margin-bottom:28px;">10 tables · up to 10 guests per table · Regis Caroline Mansion</p>
+    </div>
+
+    <div class="seating-summary" id="seat-summary">
+      <div class="seat-stat"><strong id="s-seated">0</strong>Seated</div>
+      <div class="seat-stat"><strong id="s-unassigned">0</strong>Unassigned</div>
+      <div class="seat-stat"><strong id="s-total">0</strong>Total guests</div>
+      <div class="seat-stat"><strong id="s-tables">0/10</strong>Tables filled</div>
+    </div>
+
+    <div style="margin-bottom:16px;">
+      <div style="font-size:9px;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold-soft);margin-bottom:8px;">Add guest</div>
+      <div class="seat-controls">
+        <input type="text" id="g-name" placeholder="Guest name" onkeydown="if(event.key==='Enter')addGuest()">
+        <select id="g-table">
+          <option value="">— Table (or unassigned) —</option>
+        </select>
+        <button class="btn-gold" onclick="addGuest()">Add</button>
+        <button class="btn-primary" onclick="autoAssign()">Auto-assign</button>
+        <button class="btn-primary" onclick="clearAll()">Clear all</button>
+      </div>
+    </div>
+
+    <div class="seating-grid" id="seating-grid"></div>
+
+    <div class="unassigned-box">
+      <div class="unassigned-head">
+        <span>Unassigned guests</span>
+        <span id="ua-count" style="font-size:11px;color:var(--silver);text-transform:none;letter-spacing:0;">0 guests</span>
+      </div>
+      <div class="unassigned-chips" id="ua-list">
+        <span style="font-size:11px;color:rgba(168,180,200,0.35);font-style:italic;">No unassigned guests</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MENU -->
+<div class="section-alt" id="menu">
+  <div class="section-wrap">
+    <div class="reveal">
+      <p class="section-label" style="color:var(--gold-soft)">Dining</p>
+      <h2 class="section-title">Dinner <em class="gold">menu</em> <span class="placeholder-badge">Placeholder</span></h2>
+      <p style="font-size:12px;color:var(--silver);margin-bottom:32px;margin-top:-16px;">Menu to be confirmed — update below once finalised with the venue.</p>
+    </div>
+    <div class="menu-card reveal">
+      <div class="menu-header">
+        <div class="menu-header-name">Yoshi · 四十歳</div>
+        <div class="menu-header-sub">29 August 2025 &nbsp;·&nbsp; Regis Caroline Mansion</div>
+      </div>
+      <div class="menu-body">
+        <div class="menu-course">
+          <div class="course-lbl">Welcome &nbsp;·&nbsp; 始まり</div>
+          <div class="course-items">
+            <span class="jp">冷前菜</span>
+            Seasonal amuse-bouche<br>
+            <em style="color:var(--silver);font-size:11px;">TBC with venue</em>
+          </div>
+        </div>
+        <div class="menu-course">
+          <div class="course-lbl">First course &nbsp;·&nbsp; 前菜</div>
+          <div class="course-items">
+            Chilled appetiser selection<br>
+            <em style="color:var(--silver);font-size:11px;">TBC with venue</em>
+          </div>
+        </div>
+        <div class="menu-course">
+          <div class="course-lbl">Soup &nbsp;·&nbsp; 汁物</div>
+          <div class="course-items">
+            Signature broth<br>
+            <em style="color:var(--silver);font-size:11px;">TBC with venue</em>
+          </div>
+        </div>
+        <div class="menu-course">
+          <div class="course-lbl">Main course &nbsp;·&nbsp; 主菜</div>
+          <div class="course-items">
+            Chef's selection of seasonal mains<br>
+            <em style="color:var(--silver);font-size:11px;">TBC with venue</em>
+          </div>
+        </div>
+        <div class="menu-course">
+          <div class="course-lbl">Dessert &nbsp;·&nbsp; 甘味</div>
+          <div class="course-items">
+            Birthday dessert presentation<br>
+            <em style="color:var(--silver);font-size:11px;">TBC with venue</em>
+          </div>
+        </div>
+        <div class="menu-course" style="margin-bottom:0">
+          <div class="course-lbl">Beverage &nbsp;·&nbsp; 飲み物</div>
+          <div class="course-items">Free-flow wine &amp; soft beverages throughout the evening</div>
+        </div>
+      </div>
+    </div>
+    <p class="menu-note">Menu subject to change · dietary requirements welcome</p>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-name">Yoshi</div>
+  <div class="footer-kanji" style="margin-top:6px;">よ し &nbsp;·&nbsp; 四十歳 &nbsp;·&nbsp; 29 August 2025</div>
+  <p style="font-size:10px;color:var(--silver);opacity:0.35;margin-top:20px;letter-spacing:0.15em;">with love &nbsp;菊</p>
+</footer>
+
+</div><!-- /site-content -->
+
+<script>
+/* ── PASSWORD ── */
+const PW_HASH_Y = '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8';
+const PW_SES_Y  = 'yoshi40_auth';
+
+let syncTimer;
+function setSyncStatus(state, msg){
+  const bar=document.getElementById('sync-bar'), txt=document.getElementById('sync-msg');
+  if(!bar) return;
+  bar.className='show '+state;
+  txt.textContent = msg||{saving:'Saving…',saved:'All changes saved',error:'Save failed',offline:'Working offline'}[state]||'';
+  clearTimeout(syncTimer);
+  if(state==='saved') syncTimer=setTimeout(()=>bar.classList.remove('show'),2500);
+}
+
+async function sha256(s){
+  const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s));
+  return Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,'0')).join('');
+}
+async function checkPw(){
+  const v=document.getElementById('pw-input').value.trim(); if(!v) return;
+  const h=await sha256(v);
+  if(h===PW_HASH_Y){
+    try{sessionStorage.setItem(PW_SES_Y,'1');}catch(e){}
+    unlock();
+  } else {
+    const e=document.getElementById('pw-error');
+    e.classList.add('show'); document.getElementById('pw-input').value=''; document.getElementById('pw-input').focus();
+    setTimeout(()=>e.classList.remove('show'),3000);
+  }
+}
+function unlock(){
+  const g=document.getElementById('pw-gate');
+  g.style.transition='opacity 0.5s'; g.style.opacity='0';
+  setTimeout(()=>g.style.display='none',500);
+  document.getElementById('site-content').style.display='block';
+  initSite();
+}
+function initSite(){
+  initAgenda();
+  initSeating();
+  const obs=new IntersectionObserver(es=>es.forEach(e=>e.isIntersecting&&e.target.classList.add('visible')),{threshold:0.1});
+  document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+  const secs=['details','agenda','seating','menu'];
+  const links=document.querySelectorAll('.nav-link');
+  window.addEventListener('scroll',()=>{
+    let cur='';
+    secs.forEach(id=>{const el=document.getElementById(id);if(el&&window.scrollY>=el.offsetTop-120)cur=id;});
+    links.forEach(l=>{const h=l.getAttribute('href');if(h&&h.startsWith('#'))l.classList.toggle('active',h==='#'+cur);});
+  },{passive:true});
+}
+(function(){
+  try{if(sessionStorage.getItem(PW_SES_Y)==='1'){unlock();return;}}catch(e){}
+  document.getElementById('pw-gate').style.display='flex';
+})();
+</script>
+
+<script>
+/* ── AGENDA ── */
+const AGENDA_DEFAULT = [
+  {time:'6:00 pm',  event:'Doors open · Welcome drinks',        note:'Guests welcomed in the foyer · champagne on arrival'},
+  {time:'6:30 pm',  event:'Guests seated',                       note:'Ushers guide guests to assigned tables'},
+  {time:'7:00 pm',  event:'Grand entrance — Yoshi',              note:'Guest of honour arrives · music cue'},
+  {time:'7:10 pm',  event:'Welcome toast',                       note:'Opening remarks & first champagne toast'},
+  {time:'7:20 pm',  event:'First course served',                 note:'Dinner service begins'},
+  {time:'8:00 pm',  event:'Speeches',                            note:'Friends & family tributes — 3 mins each'},
+  {time:'8:30 pm',  event:'Main course',                         note:''},
+  {time:'9:15 pm',  event:'Birthday cake presentation',          note:'Cake brought out · candles · singing'},
+  {time:'9:30 pm',  event:'Dessert & free flow',                 note:'Open bar continues · music programme'},
+  {time:'10:30 pm', event:'Photo wall & farewell',               note:'Group photo opportunity · guests depart'},
+  {time:'11:00 pm', event:'Event concludes',                     note:'Venue clear by 11:30 pm'},
+];
+
+let agendaData = [];
+let agEditIdx  = null;
+let agDragSrc  = null;
+const FB_Y = ()=> window._fb_yoshi;
+
+function loadAgenda(){
+  const fb=FB_Y();
+  agendaData = AGENDA_DEFAULT.map(a=>({...a}));
+  renderAgenda();
+  if(fb&&fb.ready){
+    fb.subscribe('agenda', data=>{
+      if(data&&Array.isArray(data)&&data.length) agendaData=data;
+      else agendaData=AGENDA_DEFAULT.map(a=>({...a}));
+      renderAgenda();
+    });
+  } else {
+    try{const s=localStorage.getItem('yoshi40_agenda');if(s)agendaData=JSON.parse(s);}catch(e){}
+    renderAgenda();
+  }
+}
+function saveAgenda(){
+  const fb=FB_Y();
+  if(fb&&fb.ready) fb.write('agenda',agendaData);
+  else try{localStorage.setItem('yoshi40_agenda',JSON.stringify(agendaData));}catch(e){}
+}
+function initAgenda(){ loadAgenda(); }
+
+function renderAgenda(){
+  const root=document.getElementById('agenda-root');
+  let h='<ul class="agenda-list">';
+  agendaData.forEach((a,i)=>{
+    if(agEditIdx===i){
+      h+=`<li class="ag-edit-row">
+        <input class="t-time" id="ae-time" value="${eH(a.time)}" placeholder="Time" onkeydown="aeKey(event,${i})">
+        <input class="t-event" id="ae-event" value="${eH(a.event)}" placeholder="Event" onkeydown="aeKey(event,${i})">
+        <input class="t-note" id="ae-note" value="${eH(a.note||'')}" placeholder="Note" onkeydown="aeKey(event,${i})">
+        <button class="btn-gold" style="padding:7px 12px;font-size:9px;" onclick="saveAgItem(${i})">Save</button>
+        <button class="btn-primary" style="padding:7px 10px;font-size:9px;" onclick="cancelAgEdit()">Cancel</button>
+      </li>`;
+    } else {
+      h+=`<li class="agenda-item">
+        <span class="drag-handle" draggable="true" ondragstart="agDragStart(event,${i})" ondragover="agDragOver(event,${i})" ondrop="agDrop(event,${i})">⠿</span>
+        <span class="ag-time">${eH(a.time)}</span>
+        <div style="flex:1">
+          <div class="ag-event">${eH(a.event)}</div>
+          ${a.note?`<div class="ag-note">${eH(a.note)}</div>`:''}
+        </div>
+        <div class="ag-actions">
+          <button class="ag-btn" onclick="editAgItem(${i})">Edit</button>
+          <button class="ag-btn del" onclick="delAgItem(${i})">Remove</button>
+          ${i>0?`<button class="ag-btn" onclick="moveAg(${i},-1)">↑</button>`:''}
+          ${i<agendaData.length-1?`<button class="ag-btn" onclick="moveAg(${i},1)">↓</button>`:''}
+        </div>
+      </li>`;
+    }
+  });
+  h+='</ul>';
+  if(agEditIdx===-1){
+    h+=`<div class="ag-edit-row" style="margin-top:12px;padding-top:14px;border-top:0.5px solid var(--border);">
+      <input class="t-time" id="ae-time" value="" placeholder="Time" onkeydown="aeKey(event,-1)">
+      <input class="t-event" id="ae-event" value="" placeholder="Event" onkeydown="aeKey(event,-1)">
+      <input class="t-note" id="ae-note" value="" placeholder="Note" onkeydown="aeKey(event,-1)">
+      <button class="btn-gold" style="padding:7px 12px;font-size:9px;" onclick="saveAgItem(-1)">Add</button>
+      <button class="btn-primary" style="padding:7px 10px;font-size:9px;" onclick="cancelAgEdit()">Cancel</button>
+    </div>`;
+  } else {
+    h+=`<div style="display:flex;gap:8px;margin-top:18px;">
+      <button class="btn-primary" onclick="addAgItem()">+ Add item</button>
+      <button class="btn-primary" onclick="resetAgenda()">Reset to defaults</button>
+    </div>`;
+  }
+  root.innerHTML=h;
+  if(agEditIdx!==null) setTimeout(()=>{ const f=document.getElementById('ae-event'); if(f)f.focus(); },30);
+}
+function eH(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function editAgItem(i){ agEditIdx=i; renderAgenda(); }
+function cancelAgEdit(){ agEditIdx=null; renderAgenda(); }
+function addAgItem(){ agEditIdx=-1; renderAgenda(); }
+function aeKey(e,i){ if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();saveAgItem(i);} if(e.key==='Escape')cancelAgEdit(); }
+function saveAgItem(i){
+  const t=(document.getElementById('ae-time')||{}).value||'';
+  const ev=(document.getElementById('ae-event')||{}).value||'';
+  const n=(document.getElementById('ae-note')||{}).value||'';
+  if(!ev.trim()){document.getElementById('ae-event').focus();return;}
+  if(i===-1) agendaData.push({time:t.trim(),event:ev.trim(),note:n.trim()});
+  else agendaData[i]={time:t.trim(),event:ev.trim(),note:n.trim()};
+  agEditIdx=null; saveAgenda(); renderAgenda();
+}
+function delAgItem(i){ if(!confirm('Remove this item?'))return; agendaData.splice(i,1); agEditIdx=null; saveAgenda(); renderAgenda(); }
+function moveAg(i,d){ const j=i+d; if(j<0||j>=agendaData.length)return; [agendaData[i],agendaData[j]]=[agendaData[j],agendaData[i]]; saveAgenda(); renderAgenda(); }
+function resetAgenda(){ if(!confirm('Reset agenda to defaults?'))return; agendaData=AGENDA_DEFAULT.map(a=>({...a})); agEditIdx=null; saveAgenda(); renderAgenda(); }
+function agDragStart(e,i){ agDragSrc=i; e.dataTransfer.effectAllowed='move'; }
+function agDragOver(e,i){ e.preventDefault(); }
+function agDrop(e,i){ e.preventDefault(); if(agDragSrc===null||agDragSrc===i)return; const it=agendaData.splice(agDragSrc,1)[0]; agendaData.splice(i,0,it); agDragSrc=null; saveAgenda(); renderAgenda(); }
+</script>
+
+<script>
+/* ── SEATING ── */
+const TABLE_DEFS_Y = [
+  {id:'T1',  name:'Table 1 — VIP',       cap:10, vip:true,  group:'VIP'},
+  {id:'T2',  name:'Table 2 — VIP',       cap:10, vip:true,  group:'VIP'},
+  {id:'T3',  name:'Table 3 — Traders',   cap:10, vip:false, group:'Trader Group'},
+  {id:'T4',  name:'Table 4',             cap:11, vip:false, group:''},
+  {id:'T5',  name:'Table 5',             cap:10, vip:false, group:''},
+  {id:'T6',  name:'Table 6',             cap:10, vip:false, group:''},
+  {id:'T7',  name:'Table 7',             cap:10, vip:false, group:''},
+  {id:'T8',  name:'Table 8',             cap:10, vip:false, group:''},
+  {id:'T9',  name:'Table 9 — MSS',       cap:10, vip:false, group:'MSS Table'},
+  {id:'T10', name:'Table 10',            cap:10, vip:false, group:''},
+];
+
+// Pre-populated seating from guest list (overrides empty default on first load)
+const SEATING_PREFILL = {
+  T1:  ['Saku','Alice Gho','Gho Sze Kee (MP)','Lotus','Peggy','Datin Khar Nai','Serene Liok','Milona','Grace Wong','Jessie Ho'],
+  T2:  ['Otosan','Helen','Ricky Ang (Kirei)',"Ricky's Wife (Doris)","Ricky's Brother (Samuel)","Ricky's Brother (Ah Leong)",'Watanabe San (KIV)',"Watanabe's Wife (KIV)",'Kitami San (KIV)','Mr. Yusuke Arai (KIV)'],
+  T3:  ['Nikunj Parekh',"Nikunj's Wife (Pooja)",'Gerry Yeap','Heng Tee','Heng Tee Wife','Fernando','Fernando Wife','Serena','Yan Guang','Sonia'],
+  T4:  ['Yukinobu','Debbie','Kenji','Keiko','Aname','Miyuki','Yoshi (KIV)','Yori','Michiyo','Doris','Molly'],
+  T5:  ['Jean Yip',"Jean's Husband (Merin)","Jean's Sister (Dawn Yip)","Jean's Brother (Oliver)","Jean's SIL (Kelly)",'Susan Peh','Celeste Basapa','Dolly Cheong','Dr Berard Cheong','Linda Soo-Tan'],
+  T6:  ['Jessica Lim','Matthew Ong','Lionnel Lim','Gilbert (Farrer Park GM)','June Low','Frances Low','Jane Heng','Jeanna Chan (Committee)','Lucas Yang (PR/Committee)','Charmaine Pang'],
+  T7:  ['Jun Hao',"Jun Hao's Daughter (1)","Jun Hao's Daughter (2)","Jun Hao's Daughter (3)",'Wee Tan',"Wee Tan's Son (1)","Wee Tan's Son (2)",'James','Kang Chi'],
+  T8:  ['Misa Jie','Jordus Lim','Leo Lim','Leo Wife (Geo)','Jimmy Leong','Pauline Chan','Clement Paik','Rosanna Paik','Happy Mok','Maverick Mok'],
+  T9:  ['Linsa Soo','Xiao Yin','Alice Lim','Kath','Kin Sann','Poh Ngoh','Chai Hock','Kwee Lim','Doreen','Irene'],
+  T10: ['Slyvester','King Kang','Angela Loh','Angela Ng','Nelson','Sun Ruyi'],
+  _ua: []
+};
+
+let seatData = {};
+
+function applyPrefill(){
+  // Use prefill only if all tables are empty (first load, nothing saved yet)
+  const allEmpty = TABLE_DEFS_Y.every(t=>(seatData[t.id]||[]).length===0) && (seatData._ua||[]).length===0;
+  if(allEmpty){
+    Object.keys(SEATING_PREFILL).forEach(k=>{ seatData[k]=[...SEATING_PREFILL[k]]; });
+  }
+}
+function initSeating(){
+  TABLE_DEFS_Y.forEach(t=>{ seatData[t.id]=[]; });
+  seatData._ua=[];
+  const fb=FB_Y();
+  if(fb&&fb.ready){
+    // Render prefill immediately
+    applyPrefill();
+    populateSeatSelect(); renderSeating();
+    fb.subscribe('seating', data=>{
+      if(data && Object.keys(data).some(k=>k!=='_ua'&&(data[k]||[]).length>0)){
+        // Firebase has real data — use it
+        seatData=data;
+        TABLE_DEFS_Y.forEach(t=>{if(!seatData[t.id])seatData[t.id]=[];});
+        if(!seatData._ua)seatData._ua=[];
+      } else {
+        // Firebase empty — use prefill and save it
+        applyPrefill();
+        saveSeat();
+      }
+      populateSeatSelect(); renderSeating();
+    });
+  } else {
+    try{const s=localStorage.getItem('yoshi40_seating');if(s){seatData=JSON.parse(s);TABLE_DEFS_Y.forEach(t=>{if(!seatData[t.id])seatData[t.id]=[];});if(!seatData._ua)seatData._ua=[];}else{applyPrefill();}}catch(e){applyPrefill();}
+    populateSeatSelect(); renderSeating();
+  }
+}
+function saveSeat(){
+  const fb=FB_Y();
+  if(fb&&fb.ready) fb.write('seating',seatData);
+  else try{localStorage.setItem('yoshi40_seating',JSON.stringify(seatData));}catch(e){}
+}
+function populateSeatSelect(){
+  const sel=document.getElementById('g-table'); if(!sel)return;
+  sel.innerHTML='<option value="">— Table (or unassigned) —</option>';
+  TABLE_DEFS_Y.forEach(t=>{
+    const used=(seatData[t.id]||[]).length;
+    const o=document.createElement('option');
+    o.value=t.id; o.textContent=`${t.name} (${used}/${t.cap})`;
+    if(used>=t.cap) o.disabled=true;
+    sel.appendChild(o);
+  });
+}
+function addGuest(){
+  const ni=document.getElementById('g-name'), ts=document.getElementById('g-table');
+  const name=ni.value.trim(); if(!name){ni.focus();return;}
+  const tid=ts.value;
+  if(tid){
+    const tbl=TABLE_DEFS_Y.find(t=>t.id===tid);
+    if(tbl&&(seatData[tid]||[]).length>=tbl.cap){alert(`${tbl.name} is full.`);return;}
+    if(!seatData[tid])seatData[tid]=[];
+    seatData[tid].push(name);
+  } else { seatData._ua.push(name); }
+  saveSeat(); ni.value=''; ni.focus(); populateSeatSelect(); renderSeating();
+}
+function removeGuest(tid, name){
+  if(tid==='_ua') seatData._ua=seatData._ua.filter(g=>g!==name);
+  else seatData[tid]=(seatData[tid]||[]).filter(g=>g!==name);
+  saveSeat(); populateSeatSelect(); renderSeating();
+}
+function assignGuest(name, tid){
+  seatData._ua=seatData._ua.filter(g=>g!==name);
+  if(tid){
+    const tbl=TABLE_DEFS_Y.find(t=>t.id===tid);
+    if(tbl&&(seatData[tid]||[]).length>=tbl.cap){alert(`${tbl.name} is full.`);seatData._ua.push(name);saveSeat();renderSeating();return;}
+    if(!seatData[tid])seatData[tid]=[];
+    seatData[tid].push(name);
+  } else { seatData._ua.push(name); }
+  saveSeat(); populateSeatSelect(); renderSeating();
+}
+function autoAssign(){
+  const ua=[...seatData._ua]; if(!ua.length){alert('No unassigned guests.');return;}
+  let n=0;
+  for(const name of ua){
+    const avail=TABLE_DEFS_Y.find(t=>(seatData[t.id]||[]).length<t.cap);
+    if(!avail)break;
+    if(!seatData[avail.id])seatData[avail.id]=[];
+    seatData[avail.id].push(name);
+    seatData._ua=seatData._ua.filter(g=>g!==name);
+    n++;
+  }
+  saveSeat(); populateSeatSelect(); renderSeating();
+  if(n<ua.length)alert(`Assigned ${n} guests. ${ua.length-n} could not be placed — tables full.`);
+}
+function clearAll(){
+  if(!confirm('Clear all seating? This cannot be undone.'))return;
+  TABLE_DEFS_Y.forEach(t=>seatData[t.id]=[]); seatData._ua=[];
+  saveSeat(); populateSeatSelect(); renderSeating();
+}
+function renderSeating(){
+  const grid=document.getElementById('seating-grid'); if(!grid)return;
+  let seated=0, full=0, html='';
+  TABLE_DEFS_Y.forEach(t=>{
+    const gs=seatData[t.id]||[]; seated+=gs.length;
+    const isFull=gs.length>=t.cap; if(isFull)full++;
+    html+=`<div class="seat-card${t.vip?' vip':''}">
+      <div class="seat-card-head">
+        <span class="seat-table-name">${t.name}</span>
+        <span class="seat-badge${isFull?' full':''}">${gs.length}/${t.cap}</span>
+        ${t.group?`<span style="font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--silver);opacity:0.6;">${t.group}</span>`:''}
+      </div>
+      <div class="seat-guests-list">
+        ${gs.length?gs.map(g=>`<div class="guest-chip"><span>${eH(g)}</span><button class="rm-btn" onclick="removeGuest('${t.id}','${eH(g).replace(/'/g,"\\'")}')">×</button></div>`).join(''):'<div class="empty-hint">Empty</div>'}
+      </div></div>`;
+  });
+  grid.innerHTML=html;
+  const ua=seatData._ua||[];
+  const total=seated+ua.length;
+  document.getElementById('s-seated').textContent=seated;
+  document.getElementById('s-unassigned').textContent=ua.length;
+  document.getElementById('s-total').textContent=total;
+  document.getElementById('s-tables').textContent=`${full}/10`;
+  document.getElementById('ua-count').textContent=`${ua.length} guest${ua.length!==1?'s':''}`;
+  const uaList=document.getElementById('ua-list');
+  if(!ua.length){ uaList.innerHTML='<span style="font-size:11px;color:rgba(168,180,200,0.35);font-style:italic;">No unassigned guests</span>'; return; }
+  uaList.innerHTML=ua.map(g=>{
+    let opts='<option value="">Move to…</option>';
+    TABLE_DEFS_Y.forEach(t=>{ const u=(seatData[t.id]||[]).length; opts+=`<option value="${t.id}"${u>=t.cap?' disabled':''}>${t.name} (${u}/${t.cap})</option>`; });
+    return `<span class="ua-chip">${eH(g)}<select onchange="assignGuest('${eH(g).replace(/'/g,"\\'")}',this.value);this.value=''">${opts}</select><button class="rm-btn" onclick="removeGuest('_ua','${eH(g).replace(/'/g,"\\'")}')">×</button></span>`;
+  }).join('');
+}
+function eH(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+</script>
+</body>
+</html>
