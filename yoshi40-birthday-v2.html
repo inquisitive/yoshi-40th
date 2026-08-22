@@ -430,6 +430,45 @@ em.gold { font-style:italic; color:var(--gold-soft); }
 .mv-btn:disabled { opacity:0.13; cursor:default; background:none; }
 .empty-hint { font-size:11px; color:rgba(168,180,200,0.35); font-style:italic; text-align:center; padding:8px 0; }
 
+/* ── FLOOR PLAN OVERLAY ── */
+.fp-wrap {
+  border:0.5px solid var(--border-md); border-radius:5px;
+  background:var(--navy); padding:14px; margin-bottom:20px;
+  overflow-x:auto;
+}
+.fp-wrap svg { display:block; width:100%; min-width:820px; height:auto; }
+.fp-room { fill:none; stroke:var(--border-md); stroke-width:2; }
+.fp-fixture { fill:rgba(168,180,200,0.06); stroke:var(--border-md); stroke-width:1; }
+.fp-fixture-label { fill:var(--silver); font-size:11px; font-family:'Jost',sans-serif; letter-spacing:0.06em; }
+.fp-band { fill:rgba(255,255,255,0.035); stroke:var(--border-md); stroke-width:1; }
+.fp-band.vip { fill:rgba(200,169,110,0.09); stroke:rgba(200,169,110,0.4); }
+.fp-band.sel { fill:rgba(200,169,110,0.2); stroke:var(--gold-soft); stroke-width:2; }
+.fp-divider { stroke:var(--border-md); stroke-width:1; }
+.fp-no { fill:var(--cream); font-family:'Shippori Mincho',serif; font-size:19px; text-anchor:middle; }
+.fp-name { fill:var(--silver); font-family:'Jost',sans-serif; font-size:10px; text-anchor:middle; letter-spacing:0.04em; }
+.fp-count { font-family:'Jost',sans-serif; font-size:10px; text-anchor:middle; fill:var(--gold-soft); }
+.fp-count.full { fill:#6abf8a; }
+.fp-count.over { fill:#d98a8a; }
+.fp-seat { stroke-width:0.75; }
+.fp-seat.empty { fill:rgba(168,180,200,0.07); stroke:rgba(168,180,200,0.2); }
+.fp-seat.taken { fill:rgba(200,169,110,0.5); stroke:rgba(200,169,110,0.75); }
+.fp-seat.taken.vip { fill:rgba(200,169,110,0.75); }
+.fp-hit { fill:transparent; cursor:pointer; }
+.fp-hit:hover { fill:rgba(200,169,110,0.07); }
+.fp-caption { fill:var(--silver); font-family:'Jost',sans-serif; font-size:11px; letter-spacing:0.1em; }
+.fp-legend { display:flex; gap:16px; flex-wrap:wrap; align-items:center; margin-top:10px; font-size:10px; color:var(--silver); letter-spacing:0.06em; }
+.fp-legend i { display:inline-block; width:11px; height:9px; border-radius:2px; margin-right:5px; vertical-align:middle; }
+.fp-detail {
+  margin-top:12px; padding:12px 14px;
+  border:0.5px solid var(--border-md); border-radius:5px;
+  background:rgba(255,255,255,0.02); font-size:12px; color:var(--silver-lt);
+}
+.fp-detail h4 { font-family:'Shippori Mincho',serif; font-size:14px; color:var(--cream); font-weight:400; margin-bottom:8px; }
+.fp-detail ol { margin:0; padding-left:22px; columns:2; column-gap:24px; }
+.fp-detail li { padding:1px 0; break-inside:avoid; }
+.fp-detail .fp-over { color:#d98a8a; }
+.fp-hint { font-size:11px; color:rgba(168,180,200,0.5); font-style:italic; }
+
 .unassigned-box { border:0.5px solid var(--border-md); border-radius:5px; overflow:hidden; margin-top:20px; }
 .unassigned-head {
   padding:10px 14px; background:rgba(255,255,255,0.02);
@@ -625,7 +664,17 @@ footer {
       </div>
     </div>
 
-    <div class="seating-grid" id="seating-grid"></div>
+    <div style="font-size:9px;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold-soft);margin-bottom:8px;">Floor plan · 108 seats</div>
+    <div class="fp-wrap" id="floorplan"></div>
+    <div class="fp-legend">
+      <span><i style="background:rgba(200,169,110,0.5);border:0.75px solid rgba(200,169,110,0.75);"></i>Taken</span>
+      <span><i style="background:rgba(168,180,200,0.07);border:0.75px solid rgba(168,180,200,0.2);"></i>Free</span>
+      <span><i style="background:rgba(200,169,110,0.09);border:1px solid rgba(200,169,110,0.4);"></i>VIP table</span>
+      <span class="fp-hint">Tap a table to see who's seated there · hover a chair for the name</span>
+    </div>
+    <div class="fp-detail" id="fp-detail"></div>
+
+    <div class="seating-grid" id="seating-grid" style="margin-top:20px;"></div>
 
     <div class="unassigned-box">
       <div class="unassigned-head">
@@ -1039,6 +1088,8 @@ function renderSeating(){
       </div></div>`;
   });
   grid.innerHTML=html;
+  // keep the floor plan in step with the cards (before the early return below)
+  if(typeof renderFloorPlan==='function') renderFloorPlan();
   const ua=seatData._ua||[];
   const total=seated+ua.length;
   document.getElementById('s-seated').textContent=seated;
@@ -1055,6 +1106,195 @@ function renderSeating(){
   }).join('');
 }
 function eH(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+</script>
+
+<script>
+/* ══════════════════════════════════════
+   FLOOR PLAN OVERLAY — Regis Caroline Mansion
+
+   Drawn to match the venue floor plan: four long banquet tables in two rows,
+   108 seats in total. The upper pair seat 30 each in three numbered sections
+   of 10; the lower pair seat 24 each in two sections of 12.
+
+   Section numbers run the way the plan numbers them — starting at 1 nearest
+   the stage on the upper-right table and counting away from it (3,2,1 then
+   7,6,5 right-to-left), then back along the lower tables (8,9 and 10,11).
+   There is no table 4.
+
+   Those plan numbers are NOT the same as this page's table names: the plan
+   skips 4 and runs to 11, while the planner's tables are named 1–10. PLAN_MAP
+   ties them together, in order, VIP tables nearest the stage. Change one line
+   there to re-seat a group somewhere else in the room.
+══════════════════════════════════════ */
+
+/* plan section number → table id in TABLE_DEFS_Y */
+const PLAN_MAP = {1:'T1', 2:'T2', 3:'T3', 5:'T4', 6:'T5', 7:'T6', 8:'T7', 9:'T8', 10:'T9', 11:'T10'};
+
+/* Vertical bands for the two table rows (SVG units). */
+const FP_ROW = {
+  upper: { seatTop:100, band:120, bandH:60, seatBot:184 },
+  lower: { seatTop:372, band:392, bandH:60, seatBot:456 },
+};
+const FP_SEAT_W = 24, FP_SEAT_H = 16;
+
+/** The four long tables, split into their numbered sections. */
+function fpSections(){
+  const out = [];
+  const run = (nums, x0, width, row, seats) => {
+    const gw = width / nums.length;
+    nums.forEach((no, i) => out.push({
+      no, row, seats,
+      x: x0 + i * gw, w: gw,
+      perRow: seats / 2,
+      first: i === 0, last: i === nums.length - 1,
+    }));
+  };
+  run([7, 6, 5],   80, 520, 'upper', 10);   // upper-left  · 30 seats
+  run([3, 2, 1],  760, 520, 'upper', 10);   // upper-right · 30 seats
+  run([8, 9],      80, 420, 'lower', 12);   // lower-left  · 24 seats
+  run([10, 11],   800, 420, 'lower', 12);   // lower-right · 24 seats
+  return out;
+}
+
+let fpSelected = null;
+
+function fpSelect(no){
+  fpSelected = (fpSelected === no) ? null : no;
+  renderFloorPlan();
+}
+
+function renderFloorPlan(){
+  const host = document.getElementById('floorplan');
+  if(!host) return;
+
+  const secs = fpSections();
+  let s = `<svg viewBox="0 0 1400 580" role="img" aria-label="Seating floor plan, 108 seats">`;
+
+  // ── Room shell & fixtures ──
+  s += `<rect class="fp-room" x="12" y="32" width="1376" height="496" rx="3"/>`;
+  // screens on the top wall
+  s += `<rect class="fp-fixture" x="560" y="26" width="200" height="12"/>`;
+  s += `<text class="fp-fixture-label" x="660" y="20" text-anchor="middle">Screen</text>`;
+  s += `<rect class="fp-fixture" x="1000" y="26" width="230" height="12"/>`;
+  s += `<text class="fp-fixture-label" x="1115" y="20" text-anchor="middle">Screen</text>`;
+  // AV table, stage and band down the right-hand wall
+  s += `<rect class="fp-fixture" x="1322" y="46" width="60" height="64"/>`;
+  s += `<text class="fp-fixture-label" x="1352" y="82" text-anchor="middle" transform="rotate(90 1352 82)">AV Table</text>`;
+  s += `<rect class="fp-fixture" x="1306" y="150" width="76" height="170"/>`;
+  s += `<text class="fp-fixture-label" x="1344" y="235" text-anchor="middle" transform="rotate(90 1344 235)">Stage 8ft × 4ft</text>`;
+  s += `<rect class="fp-fixture" x="1306" y="410" width="76" height="110"/>`;
+  s += `<text class="fp-fixture-label" x="1344" y="465" text-anchor="middle" transform="rotate(90 1344 465)">Band</text>`;
+  // ice sculpture, centre of the room
+  s += `<rect class="fp-fixture" x="612" y="262" width="180" height="58" rx="2"/>`;
+  s += `<text class="fp-fixture-label" x="702" y="285" text-anchor="middle">Ice sculpture</text>`;
+  s += `<text class="fp-fixture-label" x="702" y="299" text-anchor="middle" style="font-size:9.5px;">with Sake</text>`;
+  s += `<text class="fp-fixture-label" x="702" y="312" text-anchor="middle" style="font-size:8.5px;opacity:0.7;">1m L × 0.5m W × 0.5m H</text>`;
+  // entrance on the bottom wall
+  s += `<rect class="fp-fixture" x="560" y="522" width="130" height="12"/>`;
+  s += `<rect class="fp-fixture" x="712" y="522" width="130" height="12"/>`;
+  s += `<text class="fp-fixture-label" x="701" y="548" text-anchor="middle">Entrance</text>`;
+
+  // row capacity captions, positioned over each long table
+  s += `<text class="fp-caption" x="340"  y="88" text-anchor="middle">30 seats</text>`;
+  s += `<text class="fp-caption" x="1020" y="88" text-anchor="middle">30 seats</text>`;
+  s += `<text class="fp-caption" x="290"  y="360" text-anchor="middle">24 seats</text>`;
+  s += `<text class="fp-caption" x="1010" y="360" text-anchor="middle">24 seats</text>`;
+
+  // ── Table sections ──
+  let planSeated = 0, planOver = 0;
+
+  secs.forEach(sec => {
+    const R = FP_ROW[sec.row];
+    const tid = PLAN_MAP[sec.no];
+    const def = TABLE_DEFS_Y.find(t => t.id === tid);
+    const guests = (seatData[tid] || []);
+    const taken = Math.min(guests.length, sec.seats);
+    const over = Math.max(0, guests.length - sec.seats);
+    planSeated += taken;
+    planOver += over;
+
+    const isVip = !!(def && def.vip);
+    const isSel = fpSelected === sec.no;
+    const cls = `fp-band${isVip ? ' vip' : ''}${isSel ? ' sel' : ''}`;
+
+    s += `<rect class="${cls}" x="${sec.x}" y="${R.band}" width="${sec.w}" height="${R.bandH}"/>`;
+    if(!sec.last){
+      s += `<line class="fp-divider" x1="${sec.x + sec.w}" y1="${R.band}" x2="${sec.x + sec.w}" y2="${R.band + R.bandH}"/>`;
+    }
+
+    // chairs: top row then bottom row, filled in the planner's guest order
+    const slot = sec.w / sec.perRow;
+    for(let i = 0; i < sec.seats; i++){
+      const topRow = i < sec.perRow;
+      const col = topRow ? i : i - sec.perRow;
+      const cx = sec.x + col * slot + (slot - FP_SEAT_W) / 2;
+      const cy = topRow ? R.seatTop : R.seatBot;
+      const name = guests[i];
+      const seatCls = `fp-seat ${name ? 'taken' : 'empty'}${name && isVip ? ' vip' : ''}`;
+      s += `<rect class="${seatCls}" x="${cx.toFixed(1)}" y="${cy}" width="${FP_SEAT_W}" height="${FP_SEAT_H}" rx="3">`
+        +  `<title>${eH(def ? def.name : tid)} · seat ${i + 1}${name ? ' — ' + eH(name) : ' — free'}</title>`
+        +  `</rect>`;
+    }
+
+    // labels inside the band
+    const midX = sec.x + sec.w / 2;
+    s += `<text class="fp-no" x="${midX}" y="${R.band + 24}">${sec.no}</text>`;
+    if(def) s += `<text class="fp-name" x="${midX}" y="${R.band + 39}">${eH(def.name)}</text>`;
+    const countCls = over ? 'over' : (taken >= sec.seats ? 'full' : '');
+    s += `<text class="fp-count ${countCls}" x="${midX}" y="${R.band + 53}">`
+      +  `${guests.length}/${sec.seats}${over ? ' · ' + over + ' over' : ''}</text>`;
+
+    // one click target covering the section and both chair rows
+    s += `<rect class="fp-hit" x="${sec.x}" y="${R.seatTop}" width="${sec.w}" height="${R.seatBot + FP_SEAT_H - R.seatTop}" `
+      +  `onclick="fpSelect(${sec.no})"><title>${eH(def ? def.name : '')} — tap for the guest list</title></rect>`;
+  });
+
+  s += `<text class="fp-caption" x="700" y="570" text-anchor="middle">108 seats</text>`;
+  s += `</svg>`;
+  host.innerHTML = s;
+
+  renderFpDetail(planSeated, planOver);
+}
+
+function renderFpDetail(planSeated, planOver){
+  const box = document.getElementById('fp-detail');
+  if(!box) return;
+
+  if(fpSelected === null){
+    const ua = (seatData._ua || []).length;
+    box.innerHTML = `<span class="fp-hint">`
+      + `${planSeated} of 108 seats taken`
+      + (planOver ? ` · <span class="fp-over">${planOver} guest${planOver !== 1 ? 's' : ''} beyond the seats drawn</span>` : '')
+      + (ua ? ` · ${ua} still unassigned` : '')
+      + ` — tap a table above to see who is sitting there.</span>`;
+    return;
+  }
+
+  const sec = fpSections().find(x => x.no === fpSelected);
+  const tid = PLAN_MAP[fpSelected];
+  const def = TABLE_DEFS_Y.find(t => t.id === tid);
+  const guests = seatData[tid] || [];
+
+  let h = `<h4>Table ${fpSelected}`
+    + (def && def.name !== `Table ${fpSelected}` ? ` <span style="font-size:11px;color:var(--silver);">· listed as “${eH(def.name)}”</span>` : '')
+    + `</h4>`;
+  h += `<div style="margin-bottom:8px;font-size:11px;color:var(--silver);">`
+    + `${guests.length} of ${sec.seats} seats`
+    + (def && def.group ? ` · ${eH(def.group)}` : '')
+    + (guests.length > sec.seats
+        ? ` · <span class="fp-over">${guests.length - sec.seats} more guest${guests.length - sec.seats !== 1 ? 's' : ''} than chairs</span>`
+        : '')
+    + `</div>`;
+
+  if(!guests.length){
+    h += `<span class="fp-hint">No one seated here yet.</span>`;
+  } else {
+    h += '<ol>' + guests.map((g, i) =>
+      `<li${i >= sec.seats ? ' class="fp-over"' : ''}>${eH(g)}${i >= sec.seats ? ' — no chair' : ''}</li>`
+    ).join('') + '</ol>';
+  }
+  box.innerHTML = h;
+}
 </script>
 
 <script>
