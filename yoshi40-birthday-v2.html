@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
-<title>Yoshi — 40th Birthday</title>
+<title>Yoshi ‚Äî 40th Birthday</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@200;300;400&family=Shippori+Mincho:wght@400;500&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
@@ -47,7 +47,7 @@
 
   window.addEventListener('load', ()=>{
     if(db && typeof setSyncStatus === 'function')
-      setTimeout(()=> setSyncStatus('saved','✓ Database connected'), 900);
+      setTimeout(()=> setSyncStatus('saved','‚úì Database connected'), 900);
   });
 </script>
 
@@ -69,7 +69,7 @@
 html { scroll-behavior: smooth; }
 body { font-family:'Jost',sans-serif; background:var(--paper); color:var(--ink); font-weight:300; line-height:1.7; }
 
-/* ── SYNC ── */
+/* ‚îÄ‚îÄ SYNC ‚îÄ‚îÄ */
 #sync-bar {
   position:fixed; bottom:16px; right:16px; z-index:600;
   display:flex; align-items:center; gap:8px;
@@ -88,7 +88,7 @@ body { font-family:'Jost',sans-serif; background:var(--paper); color:var(--ink);
 #sync-bar.error  .sync-dot { background:#bf6a6a; }
 @keyframes pulse { 0%,100%{opacity:0.3} 50%{opacity:1} }
 
-/* ── PASSWORD GATE ── */
+/* ‚îÄ‚îÄ PASSWORD GATE ‚îÄ‚îÄ */
 #pw-gate {
   position:fixed; inset:0; z-index:9999;
   background:var(--ink);
@@ -141,7 +141,7 @@ body { font-family:'Jost',sans-serif; background:var(--paper); color:var(--ink);
 #pw-error.show { opacity:1; }
 #site-content { display:none; }
 
-/* ── HERO ── */
+/* ‚îÄ‚îÄ HERO ‚îÄ‚îÄ */
 .hero {
   min-height:100vh; display:flex; flex-direction:column;
   align-items:center; justify-content:center;
@@ -214,7 +214,7 @@ body { font-family:'Jost',sans-serif; background:var(--paper); color:var(--ink);
 @keyframes fadeUp { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
 @keyframes heroFade { from{opacity:0} to{opacity:0.06} }
 
-/* ── NAV ── */
+/* ‚îÄ‚îÄ NAV ‚îÄ‚îÄ */
 nav {
   position:sticky; top:0; z-index:100;
   background:rgba(15,21,32,0.94); backdrop-filter:blur(14px);
@@ -244,7 +244,7 @@ nav {
 }
 .nav-ext:hover { background:rgba(200,169,110,0.08); color:var(--gold-soft); }
 
-/* ── SECTIONS ── */
+/* ‚îÄ‚îÄ SECTIONS ‚îÄ‚îÄ */
 .section-wrap { max-width:860px; margin:0 auto; padding:80px 24px; }
 .section-alt { background:var(--ink); }
 .section-alt .section-wrap { color:var(--cream); }
@@ -261,7 +261,7 @@ nav {
 .section-alt .section-title { color:var(--cream); }
 em.gold { font-style:italic; color:var(--gold-soft); }
 
-/* ── DETAILS GRID ── */
+/* ‚îÄ‚îÄ DETAILS GRID ‚îÄ‚îÄ */
 .details-grid {
   display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
   gap:0.5px; background:var(--border-md);
@@ -275,7 +275,7 @@ em.gold { font-style:italic; color:var(--gold-soft); }
 .section-alt .detail-cell .val { color:var(--cream); }
 .detail-cell .sub { font-size:11px; color:var(--silver); margin-top:3px; }
 
-/* ── AGENDA ── */
+/* ‚îÄ‚îÄ AGENDA ‚îÄ‚îÄ */
 .agenda-list { list-style:none; }
 .agenda-item {
   display:flex; gap:20px; padding:14px 0;
@@ -320,7 +320,7 @@ em.gold { font-style:italic; color:var(--gold-soft); }
 .ag-edit-row .t-event { flex:1; min-width:140px; }
 .ag-edit-row .t-note  { flex:2; min-width:160px; color:var(--silver); }
 
-/* ── MENU ── */
+/* ‚îÄ‚îÄ MENU ‚îÄ‚îÄ */
 .menu-card {
   border:0.5px solid var(--border-md); border-radius:6px; overflow:hidden;
   max-width:640px; margin:0 auto;
@@ -350,7 +350,7 @@ em.gold { font-style:italic; color:var(--gold-soft); }
   vertical-align:middle;
 }
 
-/* ── SEATING ── */
+/* ‚îÄ‚îÄ SEATING ‚îÄ‚îÄ */
 .seating-summary {
   display:flex; gap:24px; flex-wrap:wrap;
   padding:16px 20px; margin-bottom:24px;
@@ -419,6 +419,15 @@ em.gold { font-style:italic; color:var(--gold-soft); }
   color:var(--silver); opacity:0.35; font-size:14px; line-height:1; padding:0 2px;
 }
 .rm-btn:hover { opacity:1; color:#bf6a6a; }
+.chip-btns { display:flex; align-items:center; gap:2px; flex-shrink:0; }
+.mv-btn {
+  background:none; border:none; cursor:pointer;
+  color:var(--gold-soft); opacity:0.5; font-size:11px; line-height:1;
+  padding:2px 3px; border-radius:3px;
+  transition:opacity 0.15s, background 0.15s;
+}
+.mv-btn:hover { opacity:1; background:rgba(200,169,110,0.14); }
+.mv-btn:disabled { opacity:0.13; cursor:default; background:none; }
 .empty-hint { font-size:11px; color:rgba(168,180,200,0.35); font-style:italic; text-align:center; padding:8px 0; }
 
 .unassigned-box { border:0.5px solid var(--border-md); border-radius:5px; overflow:hidden; margin-top:20px; }
@@ -441,11 +450,11 @@ em.gold { font-style:italic; color:var(--gold-soft); }
   cursor:pointer; outline:none; padding:0;
 }
 
-/* ── REVEAL ── */
+/* ‚îÄ‚îÄ REVEAL ‚îÄ‚îÄ */
 .reveal { opacity:0; transform:translateY(14px); transition:opacity 0.7s ease, transform 0.7s ease; }
 .reveal.visible { opacity:1; transform:translateY(0); }
 
-/* ── FOOTER ── */
+/* ‚îÄ‚îÄ FOOTER ‚îÄ‚îÄ */
 footer {
   background:var(--ink); text-align:center; padding:60px 24px;
   border-top:0.5px solid var(--border);
@@ -463,7 +472,7 @@ footer {
 </head>
 <body>
 
-<div id="sync-bar"><span class="sync-dot"></span><span id="sync-msg">Saving…</span></div>
+<div id="sync-bar"><span class="sync-dot"></span><span id="sync-msg">Saving‚Ä¶</span></div>
 
 <!-- PASSWORD GATE -->
 <div id="pw-gate">
@@ -484,9 +493,9 @@ footer {
     </svg>
   </div>
   <h1 class="gate-name">Yoshi</h1>
-  <p class="gate-kanji">四十 · FORTIETH</p>
+  <p class="gate-kanji">ÂõõÂçÅ ¬∑ FORTIETH</p>
   <div class="gate-rule"></div>
-  <p class="gate-label">Private · Enter password to continue</p>
+  <p class="gate-label">Private ¬∑ Enter password to continue</p>
   <div class="gate-input-wrap">
     <input type="password" id="pw-input" placeholder="Password" autocomplete="off"
       onkeydown="if(event.key==='Enter')checkPw()">
@@ -513,12 +522,12 @@ footer {
     </g>
     <circle cx="50" cy="50" r="6" stroke="#a8b4c8" stroke-width="0.5"/>
   </svg>
-  <p class="hero-age">Fortieth Birthday · 四十歳</p>
+  <p class="hero-age">Fortieth Birthday ¬∑ ÂõõÂçÅÊ≠≥</p>
   <h1 class="hero-name">Yoshi</h1>
-  <p class="hero-kanji">よ し</p>
+  <p class="hero-kanji">„Çà „Åó</p>
   <div class="hero-rule"></div>
-  <p class="hero-date">Friday · 29 August 2025</p>
-  <p class="hero-venue">Regis Caroline Mansion &nbsp;·&nbsp; Private Dinner</p>
+  <p class="hero-date">Friday ¬∑ 29 August 2025</p>
+  <p class="hero-venue">Regis Caroline Mansion &nbsp;¬∑&nbsp; Private Dinner</p>
   <div class="hero-scroll"><span>Scroll</span><div class="scroll-line"></div></div>
 </div>
 
@@ -528,7 +537,7 @@ footer {
   <a href="#agenda"   class="nav-link">Agenda</a>
   <a href="#seating"  class="nav-link">Seating</a>
   <a href="#menu"     class="nav-link">Menu</a>
-  <a href="https://docs.google.com/spreadsheets/d/15ciKJKNwc-3JjmP_Us0aZstFDqjn5GMy/edit?usp=sharing" target="_blank" class="nav-link nav-ext">📋 Guest List</a>
+  <a href="https://docs.google.com/spreadsheets/d/15ciKJKNwc-3JjmP_Us0aZstFDqjn5GMy/edit?usp=sharing" target="_blank" class="nav-link nav-ext">üìã Guest List</a>
 </nav>
 
 <!-- DETAILS -->
@@ -560,16 +569,16 @@ footer {
       <div class="detail-cell">
         <div class="lbl">Guest of honour</div>
         <div class="val">Yoshi</div>
-        <div class="sub">四十歳 · Fortieth</div>
+        <div class="sub">ÂõõÂçÅÊ≠≥ ¬∑ Fortieth</div>
       </div>
       <div class="detail-cell">
         <div class="lbl">Tables</div>
         <div class="val">10 tables</div>
-        <div class="sub">8–10 pax per table · up to 100 guests</div>
+        <div class="sub">8‚Äì10 pax per table ¬∑ up to 100 guests</div>
       </div>
       <div class="detail-cell">
         <div class="lbl">Dress code</div>
-        <div class="val">Smart casual<br>– elegant</div>
+        <div class="val">Smart casual<br>‚Äì elegant</div>
       </div>
     </div>
   </div>
@@ -592,7 +601,7 @@ footer {
     <div class="reveal">
       <p class="section-label">Table allocation</p>
       <h2 class="section-title">Seating <em class="gold">planner</em></h2>
-      <p style="font-size:13px;color:var(--silver);margin-bottom:28px;">10 tables · up to 10 guests per table · Regis Caroline Mansion</p>
+      <p style="font-size:13px;color:var(--silver);margin-bottom:28px;">10 tables ¬∑ up to 10 guests per table ¬∑ Regis Caroline Mansion</p>
     </div>
 
     <div class="seating-summary" id="seat-summary">
@@ -607,10 +616,11 @@ footer {
       <div class="seat-controls">
         <input type="text" id="g-name" placeholder="Guest name" onkeydown="if(event.key==='Enter')addGuest()">
         <select id="g-table">
-          <option value="">— Table (or unassigned) —</option>
+          <option value="">‚Äî Table (or unassigned) ‚Äî</option>
         </select>
         <button class="btn-gold" onclick="addGuest()">Add</button>
         <button class="btn-primary" onclick="autoAssign()">Auto-assign</button>
+        <button class="btn-primary" onclick="exportSeatingExcel()">&#8681; Export Excel</button>
         <button class="btn-primary" onclick="clearAll()">Clear all</button>
       </div>
     </div>
@@ -635,71 +645,71 @@ footer {
     <div class="reveal">
       <p class="section-label" style="color:var(--gold-soft)">Dining</p>
       <h2 class="section-title">Dinner <em class="gold">menu</em> <span class="placeholder-badge">Placeholder</span></h2>
-      <p style="font-size:12px;color:var(--silver);margin-bottom:32px;margin-top:-16px;">Menu to be confirmed — update below once finalised with the venue.</p>
+      <p style="font-size:12px;color:var(--silver);margin-bottom:32px;margin-top:-16px;">Menu to be confirmed ‚Äî update below once finalised with the venue.</p>
     </div>
     <div class="menu-card reveal">
       <div class="menu-header">
-        <div class="menu-header-name">Yoshi · 四十歳</div>
-        <div class="menu-header-sub">29 August 2025 &nbsp;·&nbsp; Regis Caroline Mansion</div>
+        <div class="menu-header-name">Yoshi ¬∑ ÂõõÂçÅÊ≠≥</div>
+        <div class="menu-header-sub">29 August 2025 &nbsp;¬∑&nbsp; Regis Caroline Mansion</div>
       </div>
       <div class="menu-body">
         <div class="menu-course">
-          <div class="course-lbl">Welcome &nbsp;·&nbsp; 始まり</div>
+          <div class="course-lbl">Welcome &nbsp;¬∑&nbsp; Âßã„Åæ„Çä</div>
           <div class="course-items">
-            <span class="jp">冷前菜</span>
+            <span class="jp">ÂÜ∑ÂâçËèú</span>
             Seasonal amuse-bouche<br>
             <em style="color:var(--silver);font-size:11px;">TBC with venue</em>
           </div>
         </div>
         <div class="menu-course">
-          <div class="course-lbl">First course &nbsp;·&nbsp; 前菜</div>
+          <div class="course-lbl">First course &nbsp;¬∑&nbsp; ÂâçËèú</div>
           <div class="course-items">
             Chilled appetiser selection<br>
             <em style="color:var(--silver);font-size:11px;">TBC with venue</em>
           </div>
         </div>
         <div class="menu-course">
-          <div class="course-lbl">Soup &nbsp;·&nbsp; 汁物</div>
+          <div class="course-lbl">Soup &nbsp;¬∑&nbsp; Ê±ÅÁâ©</div>
           <div class="course-items">
             Signature broth<br>
             <em style="color:var(--silver);font-size:11px;">TBC with venue</em>
           </div>
         </div>
         <div class="menu-course">
-          <div class="course-lbl">Main course &nbsp;·&nbsp; 主菜</div>
+          <div class="course-lbl">Main course &nbsp;¬∑&nbsp; ‰∏ªËèú</div>
           <div class="course-items">
             Chef's selection of seasonal mains<br>
             <em style="color:var(--silver);font-size:11px;">TBC with venue</em>
           </div>
         </div>
         <div class="menu-course">
-          <div class="course-lbl">Dessert &nbsp;·&nbsp; 甘味</div>
+          <div class="course-lbl">Dessert &nbsp;¬∑&nbsp; ÁîòÂë≥</div>
           <div class="course-items">
             Birthday dessert presentation<br>
             <em style="color:var(--silver);font-size:11px;">TBC with venue</em>
           </div>
         </div>
         <div class="menu-course" style="margin-bottom:0">
-          <div class="course-lbl">Beverage &nbsp;·&nbsp; 飲み物</div>
+          <div class="course-lbl">Beverage &nbsp;¬∑&nbsp; È£≤„ÅøÁâ©</div>
           <div class="course-items">Free-flow wine &amp; soft beverages throughout the evening</div>
         </div>
       </div>
     </div>
-    <p class="menu-note">Menu subject to change · dietary requirements welcome</p>
+    <p class="menu-note">Menu subject to change ¬∑ dietary requirements welcome</p>
   </div>
 </div>
 
 <!-- FOOTER -->
 <footer>
   <div class="footer-name">Yoshi</div>
-  <div class="footer-kanji" style="margin-top:6px;">よ し &nbsp;·&nbsp; 四十歳 &nbsp;·&nbsp; 29 August 2025</div>
-  <p style="font-size:10px;color:var(--silver);opacity:0.35;margin-top:20px;letter-spacing:0.15em;">with love &nbsp;菊</p>
+  <div class="footer-kanji" style="margin-top:6px;">„Çà „Åó &nbsp;¬∑&nbsp; ÂõõÂçÅÊ≠≥ &nbsp;¬∑&nbsp; 29 August 2025</div>
+  <p style="font-size:10px;color:var(--silver);opacity:0.35;margin-top:20px;letter-spacing:0.15em;">with love &nbsp;Ëèä</p>
 </footer>
 
 </div><!-- /site-content -->
 
 <script>
-/* ── PASSWORD ── */
+/* ‚îÄ‚îÄ PASSWORD ‚îÄ‚îÄ */
 const PW_HASH_Y = '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8';
 const PW_SES_Y  = 'yoshi40_auth';
 
@@ -708,7 +718,7 @@ function setSyncStatus(state, msg){
   const bar=document.getElementById('sync-bar'), txt=document.getElementById('sync-msg');
   if(!bar) return;
   bar.className='show '+state;
-  txt.textContent = msg||{saving:'Saving…',saved:'All changes saved',error:'Save failed',offline:'Working offline'}[state]||'';
+  txt.textContent = msg||{saving:'Saving‚Ä¶',saved:'All changes saved',error:'Save failed',offline:'Working offline'}[state]||'';
   clearTimeout(syncTimer);
   if(state==='saved') syncTimer=setTimeout(()=>bar.classList.remove('show'),2500);
 }
@@ -756,18 +766,18 @@ function initSite(){
 </script>
 
 <script>
-/* ── AGENDA ── */
+/* ‚îÄ‚îÄ AGENDA ‚îÄ‚îÄ */
 const AGENDA_DEFAULT = [
-  {time:'6:00 pm',  event:'Doors open · Welcome drinks',        note:'Guests welcomed in the foyer · champagne on arrival'},
+  {time:'6:00 pm',  event:'Doors open ¬∑ Welcome drinks',        note:'Guests welcomed in the foyer ¬∑ champagne on arrival'},
   {time:'6:30 pm',  event:'Guests seated',                       note:'Ushers guide guests to assigned tables'},
-  {time:'7:00 pm',  event:'Grand entrance — Yoshi',              note:'Guest of honour arrives · music cue'},
+  {time:'7:00 pm',  event:'Grand entrance ‚Äî Yoshi',              note:'Guest of honour arrives ¬∑ music cue'},
   {time:'7:10 pm',  event:'Welcome toast',                       note:'Opening remarks & first champagne toast'},
   {time:'7:20 pm',  event:'First course served',                 note:'Dinner service begins'},
-  {time:'8:00 pm',  event:'Speeches',                            note:'Friends & family tributes — 3 mins each'},
+  {time:'8:00 pm',  event:'Speeches',                            note:'Friends & family tributes ‚Äî 3 mins each'},
   {time:'8:30 pm',  event:'Main course',                         note:''},
-  {time:'9:15 pm',  event:'Birthday cake presentation',          note:'Cake brought out · candles · singing'},
-  {time:'9:30 pm',  event:'Dessert & free flow',                 note:'Open bar continues · music programme'},
-  {time:'10:30 pm', event:'Photo wall & farewell',               note:'Group photo opportunity · guests depart'},
+  {time:'9:15 pm',  event:'Birthday cake presentation',          note:'Cake brought out ¬∑ candles ¬∑ singing'},
+  {time:'9:30 pm',  event:'Dessert & free flow',                 note:'Open bar continues ¬∑ music programme'},
+  {time:'10:30 pm', event:'Photo wall & farewell',               note:'Group photo opportunity ¬∑ guests depart'},
   {time:'11:00 pm', event:'Event concludes',                     note:'Venue clear by 11:30 pm'},
 ];
 
@@ -812,7 +822,7 @@ function renderAgenda(){
       </li>`;
     } else {
       h+=`<li class="agenda-item">
-        <span class="drag-handle" draggable="true" ondragstart="agDragStart(event,${i})" ondragover="agDragOver(event,${i})" ondrop="agDrop(event,${i})">⠿</span>
+        <span class="drag-handle" draggable="true" ondragstart="agDragStart(event,${i})" ondragover="agDragOver(event,${i})" ondrop="agDrop(event,${i})">‚†ø</span>
         <span class="ag-time">${eH(a.time)}</span>
         <div style="flex:1">
           <div class="ag-event">${eH(a.event)}</div>
@@ -821,8 +831,8 @@ function renderAgenda(){
         <div class="ag-actions">
           <button class="ag-btn" onclick="editAgItem(${i})">Edit</button>
           <button class="ag-btn del" onclick="delAgItem(${i})">Remove</button>
-          ${i>0?`<button class="ag-btn" onclick="moveAg(${i},-1)">↑</button>`:''}
-          ${i<agendaData.length-1?`<button class="ag-btn" onclick="moveAg(${i},1)">↓</button>`:''}
+          ${i>0?`<button class="ag-btn" onclick="moveAg(${i},-1)">‚Üë</button>`:''}
+          ${i<agendaData.length-1?`<button class="ag-btn" onclick="moveAg(${i},1)">‚Üì</button>`:''}
         </div>
       </li>`;
     }
@@ -868,17 +878,17 @@ function agDrop(e,i){ e.preventDefault(); if(agDragSrc===null||agDragSrc===i)ret
 </script>
 
 <script>
-/* ── SEATING ── */
+/* ‚îÄ‚îÄ SEATING ‚îÄ‚îÄ */
 const TABLE_DEFS_Y = [
-  {id:'T1',  name:'Table 1 — VIP',       cap:10, vip:true,  group:'VIP'},
-  {id:'T2',  name:'Table 2 — VIP',       cap:10, vip:true,  group:'VIP'},
-  {id:'T3',  name:'Table 3 — Traders',   cap:10, vip:false, group:'Trader Group'},
+  {id:'T1',  name:'Table 1 ‚Äî VIP',       cap:10, vip:true,  group:'VIP'},
+  {id:'T2',  name:'Table 2 ‚Äî VIP',       cap:10, vip:true,  group:'VIP'},
+  {id:'T3',  name:'Table 3 ‚Äî Traders',   cap:10, vip:false, group:'Trader Group'},
   {id:'T4',  name:'Table 4',             cap:11, vip:false, group:''},
   {id:'T5',  name:'Table 5',             cap:10, vip:false, group:''},
   {id:'T6',  name:'Table 6',             cap:10, vip:false, group:''},
   {id:'T7',  name:'Table 7',             cap:10, vip:false, group:''},
   {id:'T8',  name:'Table 8',             cap:10, vip:false, group:''},
-  {id:'T9',  name:'Table 9 — MSS',       cap:10, vip:false, group:'MSS Table'},
+  {id:'T9',  name:'Table 9 ‚Äî MSS',       cap:10, vip:false, group:'MSS Table'},
   {id:'T10', name:'Table 10',            cap:10, vip:false, group:''},
 ];
 
@@ -916,12 +926,12 @@ function initSeating(){
     populateSeatSelect(); renderSeating();
     fb.subscribe('seating', data=>{
       if(data && Object.keys(data).some(k=>k!=='_ua'&&(data[k]||[]).length>0)){
-        // Firebase has real data — use it
+        // Firebase has real data ‚Äî use it
         seatData=data;
         TABLE_DEFS_Y.forEach(t=>{if(!seatData[t.id])seatData[t.id]=[];});
         if(!seatData._ua)seatData._ua=[];
       } else {
-        // Firebase empty — use prefill and save it
+        // Firebase empty ‚Äî use prefill and save it
         applyPrefill();
         saveSeat();
       }
@@ -939,7 +949,7 @@ function saveSeat(){
 }
 function populateSeatSelect(){
   const sel=document.getElementById('g-table'); if(!sel)return;
-  sel.innerHTML='<option value="">— Table (or unassigned) —</option>';
+  sel.innerHTML='<option value="">‚Äî Table (or unassigned) ‚Äî</option>';
   TABLE_DEFS_Y.forEach(t=>{
     const used=(seatData[t.id]||[]).length;
     const o=document.createElement('option');
@@ -965,6 +975,24 @@ function removeGuest(tid, name){
   else seatData[tid]=(seatData[tid]||[]).filter(g=>g!==name);
   saveSeat(); populateSeatSelect(); renderSeating();
 }
+// Remove by position rather than by name ‚Äî two guests can share a name
+// ("Angela", a plus-one), and the arrows below already work by index.
+function removeGuestAt(tid, idx){
+  const arr = tid==='_ua' ? seatData._ua : seatData[tid];
+  if(!Array.isArray(arr) || idx<0 || idx>=arr.length) return;
+  arr.splice(idx,1);
+  saveSeat(); populateSeatSelect(); renderSeating();
+}
+// Reorder a guest within their table (up = -1, down = +1). The stored order
+// IS the seating order, so this persists through Firebase like everything else.
+function moveGuest(tid, idx, dir){
+  const arr = seatData[tid];
+  if(!Array.isArray(arr)) return;
+  const j = idx + dir;
+  if(j<0 || j>=arr.length) return;
+  const tmp = arr[idx]; arr[idx] = arr[j]; arr[j] = tmp;
+  saveSeat(); renderSeating();
+}
 function assignGuest(name, tid){
   seatData._ua=seatData._ua.filter(g=>g!==name);
   if(tid){
@@ -987,7 +1015,7 @@ function autoAssign(){
     n++;
   }
   saveSeat(); populateSeatSelect(); renderSeating();
-  if(n<ua.length)alert(`Assigned ${n} guests. ${ua.length-n} could not be placed — tables full.`);
+  if(n<ua.length)alert(`Assigned ${n} guests. ${ua.length-n} could not be placed ‚Äî tables full.`);
 }
 function clearAll(){
   if(!confirm('Clear all seating? This cannot be undone.'))return;
@@ -1007,7 +1035,7 @@ function renderSeating(){
         ${t.group?`<span style="font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--silver);opacity:0.6;">${t.group}</span>`:''}
       </div>
       <div class="seat-guests-list">
-        ${gs.length?gs.map(g=>`<div class="guest-chip"><span>${eH(g)}</span><button class="rm-btn" onclick="removeGuest('${t.id}','${eH(g).replace(/'/g,"\\'")}')">×</button></div>`).join(''):'<div class="empty-hint">Empty</div>'}
+        ${gs.length?gs.map((g,i)=>`<div class="guest-chip"><span>${eH(g)}</span><span class="chip-btns"><button class="mv-btn"${i===0?' disabled':''} onclick="moveGuest('${t.id}',${i},-1)" title="Move up">&#8593;</button><button class="mv-btn"${i===gs.length-1?' disabled':''} onclick="moveGuest('${t.id}',${i},1)" title="Move down">&#8595;</button><button class="rm-btn" onclick="removeGuestAt('${t.id}',${i})" title="Remove">√ó</button></span></div>`).join(''):'<div class="empty-hint">Empty</div>'}
       </div></div>`;
   });
   grid.innerHTML=html;
@@ -1020,13 +1048,214 @@ function renderSeating(){
   document.getElementById('ua-count').textContent=`${ua.length} guest${ua.length!==1?'s':''}`;
   const uaList=document.getElementById('ua-list');
   if(!ua.length){ uaList.innerHTML='<span style="font-size:11px;color:rgba(168,180,200,0.35);font-style:italic;">No unassigned guests</span>'; return; }
-  uaList.innerHTML=ua.map(g=>{
-    let opts='<option value="">Move to…</option>';
+  uaList.innerHTML=ua.map((g,i)=>{
+    let opts='<option value="">Move to‚Ä¶</option>';
     TABLE_DEFS_Y.forEach(t=>{ const u=(seatData[t.id]||[]).length; opts+=`<option value="${t.id}"${u>=t.cap?' disabled':''}>${t.name} (${u}/${t.cap})</option>`; });
-    return `<span class="ua-chip">${eH(g)}<select onchange="assignGuest('${eH(g).replace(/'/g,"\\'")}',this.value);this.value=''">${opts}</select><button class="rm-btn" onclick="removeGuest('_ua','${eH(g).replace(/'/g,"\\'")}')">×</button></span>`;
+    return `<span class="ua-chip">${eH(g)}<select onchange="assignGuest('${eH(g).replace(/'/g,"\\'")}',this.value);this.value=''">${opts}</select><button class="rm-btn" onclick="removeGuestAt('_ua',${i})" title="Remove">√ó</button></span>`;
   }).join('');
 }
 function eH(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+</script>
+
+<script>
+/* ‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê
+   EXCEL EXPORT (.xlsx)
+
+   Writes a real Office Open XML workbook in the browser with no library, so
+   this page stays a single self-contained file. An .xlsx is just a ZIP of XML
+   parts, hence the small store-only (uncompressed) ZIP writer below. Cells use
+   inline strings, which avoids a shared-string table.
+‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê */
+
+let _crcTable=null;
+function crc32(bytes){
+  if(!_crcTable){
+    _crcTable=new Uint32Array(256);
+    for(let i=0;i<256;i++){
+      let c=i;
+      for(let k=0;k<8;k++) c=(c&1)?(0xEDB88320^(c>>>1)):(c>>>1);
+      _crcTable[i]=c>>>0;
+    }
+  }
+  let crc=0xFFFFFFFF;
+  for(let i=0;i<bytes.length;i++) crc=(_crcTable[(crc^bytes[i])&0xFF]^(crc>>>8))>>>0;
+  return (crc^0xFFFFFFFF)>>>0;
+}
+
+function zipStore(files){
+  const enc=new TextEncoder(), now=new Date();
+  const dosTime=(now.getHours()<<11)|(now.getMinutes()<<5)|(now.getSeconds()>>1);
+  const dosDate=((now.getFullYear()-1980)<<9)|((now.getMonth()+1)<<5)|now.getDate();
+  const parts=[], central=[];
+  let offset=0;
+
+  files.forEach(f=>{
+    const nameBytes=enc.encode(f.name), crc=crc32(f.data), size=f.data.length;
+
+    const lh=new Uint8Array(30+nameBytes.length), lv=new DataView(lh.buffer);
+    lv.setUint32(0,0x04034b50,true);
+    lv.setUint16(4,20,true);       // version needed
+    lv.setUint16(6,0x0800,true);   // UTF-8 filenames
+    lv.setUint16(8,0,true);        // method: stored
+    lv.setUint16(10,dosTime,true); lv.setUint16(12,dosDate,true);
+    lv.setUint32(14,crc,true);
+    lv.setUint32(18,size,true); lv.setUint32(22,size,true);
+    lv.setUint16(26,nameBytes.length,true); lv.setUint16(28,0,true);
+    lh.set(nameBytes,30);
+    parts.push(lh,f.data);
+
+    const cd=new Uint8Array(46+nameBytes.length), cv=new DataView(cd.buffer);
+    cv.setUint32(0,0x02014b50,true);
+    cv.setUint16(4,20,true); cv.setUint16(6,20,true);
+    cv.setUint16(8,0x0800,true); cv.setUint16(10,0,true);
+    cv.setUint16(12,dosTime,true); cv.setUint16(14,dosDate,true);
+    cv.setUint32(16,crc,true);
+    cv.setUint32(20,size,true); cv.setUint32(24,size,true);
+    cv.setUint16(28,nameBytes.length,true);
+    cv.setUint16(30,0,true); cv.setUint16(32,0,true); cv.setUint16(34,0,true);
+    cv.setUint16(36,0,true); cv.setUint32(38,0,true);
+    cv.setUint32(42,offset,true);
+    cd.set(nameBytes,46);
+    central.push(cd);
+
+    offset+=lh.length+size;
+  });
+
+  const cdSize=central.reduce((n,c)=>n+c.length,0);
+  const eocd=new Uint8Array(22), ev=new DataView(eocd.buffer);
+  ev.setUint32(0,0x06054b50,true);
+  ev.setUint16(4,0,true); ev.setUint16(6,0,true);
+  ev.setUint16(8,files.length,true); ev.setUint16(10,files.length,true);
+  ev.setUint32(12,cdSize,true); ev.setUint32(16,offset,true);
+  ev.setUint16(20,0,true);
+
+  const all=parts.concat(central,[eocd]);
+  const out=new Uint8Array(all.reduce((n,p)=>n+p.length,0));
+  let p=0; all.forEach(c=>{ out.set(c,p); p+=c.length; });
+  return out;
+}
+
+function xlEsc(s){
+  return String(s==null?'':s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&apos;')
+    .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g,'');   // illegal in XML
+}
+function xlCol(n){
+  let s='';
+  while(n>0){ const m=(n-1)%26; s=String.fromCharCode(65+m)+s; n=Math.floor((n-1)/26); }
+  return s;
+}
+function xlSheetXml(rows,widths){
+  let x='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+    +'<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">';
+  if(widths&&widths.length){
+    x+='<cols>';
+    widths.forEach((w,i)=>{ x+=`<col min="${i+1}" max="${i+1}" width="${w}" customWidth="1"/>`; });
+    x+='</cols>';
+  }
+  x+='<sheetData>';
+  rows.forEach((row,ri)=>{
+    x+=`<row r="${ri+1}">`;
+    (row||[]).forEach((cell,ci)=>{
+      if(cell===null||cell===undefined||cell==='') return;
+      const ref=xlCol(ci+1)+(ri+1);
+      if(typeof cell==='number'&&isFinite(cell)) x+=`<c r="${ref}"><v>${cell}</v></c>`;
+      else x+=`<c r="${ref}" t="inlineStr"><is><t xml:space="preserve">${xlEsc(cell)}</t></is></c>`;
+    });
+    x+='</row>';
+  });
+  return x+'</sheetData></worksheet>';
+}
+// Excel forbids : \ / ? * [ ] in sheet names, and caps them at 31 chars.
+function xlSheetName(n){ return String(n).replace(/[:\\\/\?\*\[\]]/g,' ').slice(0,31)||'Sheet'; }
+
+function buildXlsx(sheets){
+  const enc=new TextEncoder(), files=[];
+  const add=(name,str)=>files.push({name,data:enc.encode(str)});
+
+  let types='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+    +'<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">'
+    +'<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>'
+    +'<Default Extension="xml" ContentType="application/xml"/>'
+    +'<Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>';
+  let wbSheets='', wbRels='';
+  sheets.forEach((s,i)=>{
+    const n=i+1;
+    types+=`<Override PartName="/xl/worksheets/sheet${n}.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>`;
+    wbSheets+=`<sheet name="${xlEsc(xlSheetName(s.name))}" sheetId="${n}" r:id="rId${n}"/>`;
+    wbRels+=`<Relationship Id="rId${n}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet${n}.xml"/>`;
+    add(`xl/worksheets/sheet${n}.xml`, xlSheetXml(s.rows,s.widths));
+  });
+  types+='</Types>';
+
+  add('[Content_Types].xml',types);
+  add('_rels/.rels','<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+    +'<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'
+    +'<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/>'
+    +'</Relationships>');
+  add('xl/workbook.xml','<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+    +'<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"'
+    +' xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">'
+    +`<sheets>${wbSheets}</sheets></workbook>`);
+  add('xl/_rels/workbook.xml.rels','<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+    +`<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">${wbRels}</Relationships>`);
+
+  return zipStore(files);
+}
+
+function downloadXlsx(filename,sheets){
+  try{
+    const blob=new Blob([buildXlsx(sheets)],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');
+    a.href=url; a.download=filename;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(()=>URL.revokeObjectURL(url),5000);
+  }catch(e){
+    console.error('Excel export failed',e);
+    alert('Sorry ‚Äî the Excel export failed. Please try again.');
+  }
+}
+
+const XL_HEADER='Yoshi ‚Äî 40th Birthday ¬∑ Friday 29 August 2025 ¬∑ Regis Caroline Mansion';
+function xlToday(){
+  const d=new Date();
+  const M=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return `Exported ${d.getDate()} ${M[d.getMonth()]} ${d.getFullYear()}`;
+}
+
+/* Seating plan ‚Üí Excel. Rows follow the on-screen order, so the ‚Üë ‚Üì arrows
+   decide the seat numbers in the export too. */
+function exportSeatingExcel(){
+  const plan=[['Seating Plan'],[XL_HEADER],[xlToday()],[],['Table','Group','Seat','Guest Name']];
+  let seated=0;
+  TABLE_DEFS_Y.forEach(t=>{
+    const gs=seatData[t.id]||[];
+    seated+=gs.length;
+    if(!gs.length) plan.push([t.name,t.group||'','','(empty)']);
+    else gs.forEach((g,i)=>plan.push([t.name,t.group||'',i+1,g]));
+  });
+  const ua=seatData._ua||[];
+  ua.forEach((g,i)=>plan.push(['Unassigned','',i+1,g]));
+
+  const summary=[['Table Summary'],[XL_HEADER],[xlToday()],[],['Table','Group','Seated','Capacity','Free']];
+  TABLE_DEFS_Y.forEach(t=>{
+    const n=(seatData[t.id]||[]).length;
+    summary.push([t.name,t.group||'',n,t.cap,t.cap-n]);
+  });
+  summary.push([]);
+  summary.push(['Total seated','',seated]);
+  summary.push(['Unassigned','',ua.length]);
+  summary.push(['Total guests','',seated+ua.length]);
+  summary.push(['Tables','',TABLE_DEFS_Y.length]);
+  summary.push(['Capacity','',TABLE_DEFS_Y.reduce((n,t)=>n+t.cap,0)]);
+
+  downloadXlsx('yoshi40-seating-plan.xlsx',[
+    {name:'Seating Plan', rows:plan,    widths:[20,16,8,34]},
+    {name:'Table Summary',rows:summary, widths:[20,16,10,10,10]},
+  ]);
+}
 </script>
 </body>
 </html>
