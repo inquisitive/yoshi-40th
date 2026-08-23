@@ -456,18 +456,22 @@ em.gold { font-style:italic; color:var(--gold-soft); }
 .fp-hit { fill:transparent; cursor:pointer; }
 .fp-hit:hover { fill:rgba(200,169,110,0.07); }
 .fp-caption { fill:var(--silver); font-family:'Jost',sans-serif; font-size:11px; letter-spacing:0.1em; }
-.fp-legend { display:flex; gap:16px; flex-wrap:wrap; align-items:center; margin-top:10px; font-size:10px; color:var(--silver); letter-spacing:0.06em; }
+/* The legend sits on the light page background, so it needs dark text. */
+.fp-legend { display:flex; gap:16px; flex-wrap:wrap; align-items:center; margin-top:10px; font-size:10px; color:var(--navy-mid); letter-spacing:0.06em; }
 .fp-legend i { display:inline-block; width:11px; height:9px; border-radius:2px; margin-right:5px; vertical-align:middle; }
+.fp-legend .fp-hint { color:rgba(36,51,88,0.8); }
+/* The detail panel belongs to the plan above it, so it carries the same navy. */
 .fp-detail {
   margin-top:12px; padding:12px 14px;
   border:0.5px solid var(--border-md); border-radius:5px;
-  background:rgba(255,255,255,0.02); font-size:12px; color:var(--silver-lt);
+  background:var(--navy); font-size:12px; color:var(--silver-lt);
 }
 .fp-detail h4 { font-family:'Shippori Mincho',serif; font-size:14px; color:var(--cream); font-weight:400; margin-bottom:8px; }
 .fp-detail ol { margin:0; padding-left:22px; columns:2; column-gap:24px; }
 .fp-detail li { padding:1px 0; break-inside:avoid; }
-.fp-detail .fp-over { color:#d98a8a; }
-.fp-hint { font-size:11px; color:rgba(168,180,200,0.5); font-style:italic; }
+.fp-detail .fp-over { color:#e79a9a; }
+.fp-detail .fp-hint { color:rgba(212,220,232,0.72); }
+.fp-hint { font-size:11px; font-style:italic; }
 
 .unassigned-box { border:0.5px solid var(--border-md); border-radius:5px; overflow:hidden; margin-top:20px; }
 .unassigned-head {
@@ -613,7 +617,7 @@ footer {
       <div class="detail-cell">
         <div class="lbl">Tables</div>
         <div class="val">10 tables</div>
-        <div class="sub">8–10 pax per table · up to 100 guests</div>
+        <div class="sub">Numbered 1–11, no table 4 · 108 seats</div>
       </div>
       <div class="detail-cell">
         <div class="lbl">Dress code</div>
@@ -640,7 +644,7 @@ footer {
     <div class="reveal">
       <p class="section-label">Table allocation</p>
       <h2 class="section-title">Seating <em class="gold">planner</em></h2>
-      <p style="font-size:13px;color:var(--silver);margin-bottom:28px;">10 tables · up to 10 guests per table · Regis Caroline Mansion</p>
+      <p style="font-size:13px;color:var(--navy-mid);margin-bottom:28px;">10 long-table sections numbered 1–11, skipping 4 · 108 seats · Regis Caroline Mansion</p>
     </div>
 
     <div class="seating-summary" id="seat-summary">
@@ -928,17 +932,21 @@ function agDrop(e,i){ e.preventDefault(); if(agDragSrc===null||agDragSrc===i)ret
 
 <script>
 /* ── SEATING ── */
+// Numbered to match the venue floor plan: 1, 2, 3, then 5 onward to 11 —
+// there is no table 4. The `id` values are permanent STORAGE KEYS (guest lists
+// in Firebase are filed under them) so they stay T1–T10 and deliberately do
+// not match the numbers on the cards: id T4 is "Table 5", T10 is "Table 11".
 const TABLE_DEFS_Y = [
   {id:'T1',  name:'Table 1 — VIP',       cap:10, vip:true,  group:'VIP'},
   {id:'T2',  name:'Table 2 — VIP',       cap:10, vip:true,  group:'VIP'},
   {id:'T3',  name:'Table 3 — Traders',   cap:10, vip:false, group:'Trader Group'},
-  {id:'T4',  name:'Table 4',             cap:11, vip:false, group:''},
-  {id:'T5',  name:'Table 5',             cap:10, vip:false, group:''},
-  {id:'T6',  name:'Table 6',             cap:10, vip:false, group:''},
-  {id:'T7',  name:'Table 7',             cap:10, vip:false, group:''},
-  {id:'T8',  name:'Table 8',             cap:10, vip:false, group:''},
-  {id:'T9',  name:'Table 9 — MSS',       cap:10, vip:false, group:'MSS Table'},
-  {id:'T10', name:'Table 10',            cap:10, vip:false, group:''},
+  {id:'T4',  name:'Table 5',             cap:11, vip:false, group:''},
+  {id:'T5',  name:'Table 6',             cap:10, vip:false, group:''},
+  {id:'T6',  name:'Table 7',             cap:10, vip:false, group:''},
+  {id:'T7',  name:'Table 8',             cap:10, vip:false, group:''},
+  {id:'T8',  name:'Table 9',             cap:10, vip:false, group:''},
+  {id:'T9',  name:'Table 10 — MSS',      cap:10, vip:false, group:'MSS Table'},
+  {id:'T10', name:'Table 11',            cap:10, vip:false, group:''},
 ];
 
 // Pre-populated seating from guest list (overrides empty default on first load)
@@ -1239,7 +1247,8 @@ function renderFloorPlan(){
     // labels inside the band
     const midX = sec.x + sec.w / 2;
     s += `<text class="fp-no" x="${midX}" y="${R.band + 24}">${sec.no}</text>`;
-    if(def) s += `<text class="fp-name" x="${midX}" y="${R.band + 39}">${eH(def.name)}</text>`;
+    // the number already matches the card, so the second line carries the group
+    if(def && def.group) s += `<text class="fp-name" x="${midX}" y="${R.band + 39}">${eH(def.group)}</text>`;
     const countCls = over ? 'over' : (taken >= sec.seats ? 'full' : '');
     s += `<text class="fp-count ${countCls}" x="${midX}" y="${R.band + 53}">`
       +  `${guests.length}/${sec.seats}${over ? ' · ' + over + ' over' : ''}</text>`;
@@ -1275,8 +1284,10 @@ function renderFpDetail(planSeated, planOver){
   const def = TABLE_DEFS_Y.find(t => t.id === tid);
   const guests = seatData[tid] || [];
 
-  let h = `<h4>Table ${fpSelected}`
-    + (def && def.name !== `Table ${fpSelected}` ? ` <span style="font-size:11px;color:var(--silver);">· listed as “${eH(def.name)}”</span>` : '')
+  // Names now carry the plan's numbers, so only flag a genuine disagreement.
+  const nameFitsSlot = def && new RegExp(`^Table\\s+${fpSelected}\\b`).test(def.name);
+  let h = `<h4>${def ? eH(def.name) : 'Table ' + fpSelected}`
+    + (nameFitsSlot ? '' : ` <span style="font-size:11px;color:var(--silver);">· sits in plan position ${fpSelected}</span>`)
     + `</h4>`;
   h += `<div style="margin-bottom:8px;font-size:11px;color:var(--silver);">`
     + `${guests.length} of ${sec.seats} seats`
