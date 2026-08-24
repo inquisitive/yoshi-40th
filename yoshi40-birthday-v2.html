@@ -444,7 +444,7 @@ em.gold { font-style:italic; color:var(--gold-soft); }
 .fp-band.vip { fill:rgba(200,169,110,0.09); stroke:rgba(200,169,110,0.4); }
 .fp-band.sel { fill:rgba(200,169,110,0.2); stroke:var(--gold-soft); stroke-width:2; }
 .fp-divider { stroke:var(--border-md); stroke-width:1; }
-.fp-no { fill:var(--cream); font-family:'Shippori Mincho',serif; font-size:19px; text-anchor:middle; }
+.fp-no { fill:var(--cream); font-family:'Shippori Mincho',serif; font-size:26px; letter-spacing:0.08em; text-anchor:middle; }
 .fp-name { fill:var(--silver); font-family:'Jost',sans-serif; font-size:10px; text-anchor:middle; letter-spacing:0.04em; }
 .fp-count { font-family:'Jost',sans-serif; font-size:10px; text-anchor:middle; fill:var(--gold-soft); }
 .fp-count.full { fill:#6abf8a; }
@@ -467,7 +467,7 @@ em.gold { font-style:italic; color:var(--gold-soft); }
   background:var(--navy); font-size:12px; color:var(--silver-lt);
 }
 .fp-detail h4 { font-family:'Shippori Mincho',serif; font-size:14px; color:var(--cream); font-weight:400; margin-bottom:8px; }
-.fp-detail ol { margin:0; padding-left:22px; columns:2; column-gap:24px; }
+.fp-detail ol { margin:0; padding-left:22px; column-width:190px; column-gap:24px; }
 .fp-detail li { padding:1px 0; break-inside:avoid; }
 .fp-detail .fp-over { color:#e79a9a; }
 .fp-detail .fp-hint { color:rgba(212,220,232,0.72); }
@@ -616,8 +616,8 @@ footer {
       </div>
       <div class="detail-cell">
         <div class="lbl">Tables</div>
-        <div class="val">10 tables</div>
-        <div class="sub">Numbered 1–11, no table 4 · 108 seats</div>
+        <div class="val">4 long tables</div>
+        <div class="sub">Y · O · S · H · 108 seats</div>
       </div>
       <div class="detail-cell">
         <div class="lbl">Dress code</div>
@@ -644,14 +644,14 @@ footer {
     <div class="reveal">
       <p class="section-label">Table allocation</p>
       <h2 class="section-title">Seating <em class="gold">planner</em></h2>
-      <p style="font-size:13px;color:var(--navy-mid);margin-bottom:28px;">10 long-table sections numbered 1–11, skipping 4 · 108 seats · Regis Caroline Mansion</p>
+      <p style="font-size:13px;color:var(--navy-mid);margin-bottom:28px;">Four long tables — Y, O, S and H · 30 + 30 + 24 + 24 = 108 seats · Regis Caroline Mansion</p>
     </div>
 
     <div class="seating-summary" id="seat-summary">
       <div class="seat-stat"><strong id="s-seated">0</strong>Seated</div>
       <div class="seat-stat"><strong id="s-unassigned">0</strong>Unassigned</div>
       <div class="seat-stat"><strong id="s-total">0</strong>Total guests</div>
-      <div class="seat-stat"><strong id="s-tables">0/10</strong>Tables filled</div>
+      <div class="seat-stat"><strong id="s-tables">0/4</strong>Tables filled</div>
     </div>
 
     <div style="margin-bottom:16px;">
@@ -932,22 +932,31 @@ function agDrop(e,i){ e.preventDefault(); if(agDragSrc===null||agDragSrc===i)ret
 
 <script>
 /* ── SEATING ── */
-// Numbered to match the venue floor plan: 1, 2, 3, then 5 onward to 11 —
-// there is no table 4. The `id` values are permanent STORAGE KEYS (guest lists
-// in Firebase are filed under them) so they stay T1–T10 and deliberately do
-// not match the numbers on the cards: id T4 is "Table 5", T10 is "Table 11".
+/* Four long tables, one per physical banquet run, named for the birthday boy.
+   Reading the room left to right, top to bottom, they spell Y · O · S · H:
+
+     Y = upper-left  (30 seats)      O = upper-right (30 seats, nearest stage)
+     S = lower-left  (24 seats)      H = lower-right (24 seats)
+
+   Capacities are the room's real seat counts and add up to 108. */
 const TABLE_DEFS_Y = [
-  {id:'T1',  name:'Table 1 — VIP',       cap:10, vip:true,  group:'VIP'},
-  {id:'T2',  name:'Table 2 — VIP',       cap:10, vip:true,  group:'VIP'},
-  {id:'T3',  name:'Table 3 — Traders',   cap:10, vip:false, group:'Trader Group'},
-  {id:'T4',  name:'Table 5',             cap:11, vip:false, group:''},
-  {id:'T5',  name:'Table 6',             cap:10, vip:false, group:''},
-  {id:'T6',  name:'Table 7',             cap:10, vip:false, group:''},
-  {id:'T7',  name:'Table 8',             cap:10, vip:false, group:''},
-  {id:'T8',  name:'Table 9',             cap:10, vip:false, group:''},
-  {id:'T9',  name:'Table 10 — MSS',      cap:10, vip:false, group:'MSS Table'},
-  {id:'T10', name:'Table 11',            cap:10, vip:false, group:''},
+  {id:'TY', name:'Table Y', cap:30, vip:false, group:''},
+  {id:'TO', name:'Table O', cap:30, vip:true,  group:'VIP & Traders'},
+  {id:'TS', name:'Table S', cap:24, vip:false, group:''},
+  {id:'TH', name:'Table H', cap:24, vip:false, group:'MSS'},
 ];
+
+/* Which of the old numbered tables each long table absorbed, in the order they
+   physically sit along it (left to right as drawn on the floor plan). Table O
+   runs 3 → 2 → 1 because the plan numbers that side toward the stage, so the
+   VIPs end up at the stage end. Used both to build the prefill and to migrate
+   guest lists already saved under the old keys. */
+const TABLE_MERGE = {
+  TY: ['T6','T5','T4'],   // old tables 7, 6, 5
+  TO: ['T3','T2','T1'],   // old tables 3, 2, 1
+  TS: ['T7','T8'],        // old tables 8, 9
+  TH: ['T9','T10'],       // old tables 10, 11
+};
 
 // Pre-populated seating from guest list (overrides empty default on first load)
 const SEATING_PREFILL = {
@@ -966,12 +975,44 @@ const SEATING_PREFILL = {
 
 let seatData = {};
 
+/* The prefill above is still written per old numbered table — that keeps the
+   guest list readable and diffable. Compile it into the four long tables. */
+function compiledPrefill(){
+  const out = { _ua: [...(SEATING_PREFILL._ua || [])] };
+  Object.keys(TABLE_MERGE).forEach(newId => {
+    out[newId] = TABLE_MERGE[newId].reduce(
+      (acc, oldId) => acc.concat(SEATING_PREFILL[oldId] || []), []);
+  });
+  return out;
+}
+
 function applyPrefill(){
   // Use prefill only if all tables are empty (first load, nothing saved yet)
   const allEmpty = TABLE_DEFS_Y.every(t=>(seatData[t.id]||[]).length===0) && (seatData._ua||[]).length===0;
   if(allEmpty){
-    Object.keys(SEATING_PREFILL).forEach(k=>{ seatData[k]=[...SEATING_PREFILL[k]]; });
+    const pre = compiledPrefill();
+    Object.keys(pre).forEach(k=>{ seatData[k]=[...pre[k]]; });
   }
+}
+
+/* Fold any seating still saved under the old T1–T10 keys into the four long
+   tables, preserving each guest's order along the table. The old keys are
+   dropped as we go, so this only ever runs once per stored copy — and it is a
+   no-op for data that is already in the new shape. Returns true if it changed
+   anything, so the caller knows to save. */
+function migrateSeating(){
+  let changed = false;
+  Object.keys(TABLE_MERGE).forEach(newId => {
+    if(!Array.isArray(seatData[newId])) seatData[newId] = [];
+    TABLE_MERGE[newId].forEach(oldId => {
+      if(!(oldId in seatData)) return;
+      const legacy = seatData[oldId];
+      if(Array.isArray(legacy) && legacy.length) seatData[newId] = seatData[newId].concat(legacy);
+      delete seatData[oldId];
+      changed = true;
+    });
+  });
+  return changed;
 }
 function initSeating(){
   TABLE_DEFS_Y.forEach(t=>{ seatData[t.id]=[]; });
@@ -987,6 +1028,8 @@ function initSeating(){
         seatData=data;
         TABLE_DEFS_Y.forEach(t=>{if(!seatData[t.id])seatData[t.id]=[];});
         if(!seatData._ua)seatData._ua=[];
+        // fold anything still filed under the old numbered tables into Y/O/S/H
+        if(migrateSeating()) saveSeat();
       } else {
         // Firebase empty — use prefill and save it
         applyPrefill();
@@ -995,7 +1038,7 @@ function initSeating(){
       populateSeatSelect(); renderSeating();
     });
   } else {
-    try{const s=localStorage.getItem('yoshi40_seating');if(s){seatData=JSON.parse(s);TABLE_DEFS_Y.forEach(t=>{if(!seatData[t.id])seatData[t.id]=[];});if(!seatData._ua)seatData._ua=[];}else{applyPrefill();}}catch(e){applyPrefill();}
+    try{const s=localStorage.getItem('yoshi40_seating');if(s){seatData=JSON.parse(s);TABLE_DEFS_Y.forEach(t=>{if(!seatData[t.id])seatData[t.id]=[];});if(!seatData._ua)seatData._ua=[];if(migrateSeating())saveSeat();}else{applyPrefill();}}catch(e){applyPrefill();}
     populateSeatSelect(); renderSeating();
   }
 }
@@ -1103,7 +1146,7 @@ function renderSeating(){
   document.getElementById('s-seated').textContent=seated;
   document.getElementById('s-unassigned').textContent=ua.length;
   document.getElementById('s-total').textContent=total;
-  document.getElementById('s-tables').textContent=`${full}/10`;
+  document.getElementById('s-tables').textContent=`${full}/${TABLE_DEFS_Y.length}`;
   document.getElementById('ua-count').textContent=`${ua.length} guest${ua.length!==1?'s':''}`;
   const uaList=document.getElementById('ua-list');
   if(!ua.length){ uaList.innerHTML='<span style="font-size:11px;color:rgba(168,180,200,0.35);font-style:italic;">No unassigned guests</span>'; return; }
@@ -1121,22 +1164,13 @@ function eH(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').
    FLOOR PLAN OVERLAY — Regis Caroline Mansion
 
    Drawn to match the venue floor plan: four long banquet tables in two rows,
-   108 seats in total. The upper pair seat 30 each in three numbered sections
-   of 10; the lower pair seat 24 each in two sections of 12.
+   108 seats in total — Y and O seat 30 each, S and H seat 24 each.
 
-   Section numbers run the way the plan numbers them — starting at 1 nearest
-   the stage on the upper-right table and counting away from it (3,2,1 then
-   7,6,5 right-to-left), then back along the lower tables (8,9 and 10,11).
-   There is no table 4.
-
-   Those plan numbers are NOT the same as this page's table names: the plan
-   skips 4 and runs to 11, while the planner's tables are named 1–10. PLAN_MAP
-   ties them together, in order, VIP tables nearest the stage. Change one line
-   there to re-seat a group somewhere else in the room.
+   The faint dividers inside each table are the trestle joins from the plan
+   (three per upper table, two per lower one). They are decoration only now
+   that each run is one table; seats number straight through, 1..30 or 1..24,
+   left to right along the top side and then the bottom.
 ══════════════════════════════════════ */
-
-/* plan section number → table id in TABLE_DEFS_Y */
-const PLAN_MAP = {1:'T1', 2:'T2', 3:'T3', 5:'T4', 6:'T5', 7:'T6', 8:'T7', 9:'T8', 10:'T9', 11:'T10'};
 
 /* Vertical bands for the two table rows (SVG units). */
 const FP_ROW = {
@@ -1145,29 +1179,20 @@ const FP_ROW = {
 };
 const FP_SEAT_W = 24, FP_SEAT_H = 16;
 
-/** The four long tables, split into their numbered sections. */
-function fpSections(){
-  const out = [];
-  const run = (nums, x0, width, row, seats) => {
-    const gw = width / nums.length;
-    nums.forEach((no, i) => out.push({
-      no, row, seats,
-      x: x0 + i * gw, w: gw,
-      perRow: seats / 2,
-      first: i === 0, last: i === nums.length - 1,
-    }));
-  };
-  run([7, 6, 5],   80, 520, 'upper', 10);   // upper-left  · 30 seats
-  run([3, 2, 1],  760, 520, 'upper', 10);   // upper-right · 30 seats
-  run([8, 9],      80, 420, 'lower', 12);   // lower-left  · 24 seats
-  run([10, 11],   800, 420, 'lower', 12);   // lower-right · 24 seats
-  return out;
+/** The four long tables, positioned as the floor plan draws them. */
+function fpTables(){
+  return [
+    { id:'TY', x: 80, w:520, row:'upper', seats:30, splits:3 },   // upper-left
+    { id:'TO', x:760, w:520, row:'upper', seats:30, splits:3 },   // upper-right, by the stage
+    { id:'TS', x: 80, w:420, row:'lower', seats:24, splits:2 },   // lower-left
+    { id:'TH', x:800, w:420, row:'lower', seats:24, splits:2 },   // lower-right
+  ];
 }
 
 let fpSelected = null;
 
-function fpSelect(no){
-  fpSelected = (fpSelected === no) ? null : no;
+function fpSelect(id){
+  fpSelected = (fpSelected === id) ? null : id;
   renderFloorPlan();
 }
 
@@ -1175,8 +1200,8 @@ function renderFloorPlan(){
   const host = document.getElementById('floorplan');
   if(!host) return;
 
-  const secs = fpSections();
-  let s = `<svg viewBox="0 0 1400 580" role="img" aria-label="Seating floor plan, 108 seats">`;
+  const secs = fpTables();
+  let s = `<svg viewBox="0 0 1400 580" role="img" aria-label="Seating floor plan, four long tables, 108 seats">`;
 
   // ── Room shell & fixtures ──
   s += `<rect class="fp-room" x="12" y="32" width="1376" height="496" rx="3"/>`;
@@ -1213,7 +1238,7 @@ function renderFloorPlan(){
 
   secs.forEach(sec => {
     const R = FP_ROW[sec.row];
-    const tid = PLAN_MAP[sec.no];
+    const tid = sec.id;
     const def = TABLE_DEFS_Y.find(t => t.id === tid);
     const guests = (seatData[tid] || []);
     const taken = Math.min(guests.length, sec.seats);
@@ -1222,19 +1247,22 @@ function renderFloorPlan(){
     planOver += over;
 
     const isVip = !!(def && def.vip);
-    const isSel = fpSelected === sec.no;
+    const isSel = fpSelected === tid;
     const cls = `fp-band${isVip ? ' vip' : ''}${isSel ? ' sel' : ''}`;
 
     s += `<rect class="${cls}" x="${sec.x}" y="${R.band}" width="${sec.w}" height="${R.bandH}"/>`;
-    if(!sec.last){
-      s += `<line class="fp-divider" x1="${sec.x + sec.w}" y1="${R.band}" x2="${sec.x + sec.w}" y2="${R.band + R.bandH}"/>`;
+    // trestle joins from the plan, drawn faintly inside the run
+    for(let d = 1; d < sec.splits; d++){
+      const dx = sec.x + (sec.w / sec.splits) * d;
+      s += `<line class="fp-divider" x1="${dx.toFixed(1)}" y1="${R.band}" x2="${dx.toFixed(1)}" y2="${R.band + R.bandH}" opacity="0.45"/>`;
     }
 
-    // chairs: top row then bottom row, filled in the planner's guest order
-    const slot = sec.w / sec.perRow;
+    // chairs: along the top side first, then the bottom, in the guest order
+    const perRow = sec.seats / 2;
+    const slot = sec.w / perRow;
     for(let i = 0; i < sec.seats; i++){
-      const topRow = i < sec.perRow;
-      const col = topRow ? i : i - sec.perRow;
+      const topRow = i < perRow;
+      const col = topRow ? i : i - perRow;
       const cx = sec.x + col * slot + (slot - FP_SEAT_W) / 2;
       const cy = topRow ? R.seatTop : R.seatBot;
       const name = guests[i];
@@ -1246,16 +1274,16 @@ function renderFloorPlan(){
 
     // labels inside the band
     const midX = sec.x + sec.w / 2;
-    s += `<text class="fp-no" x="${midX}" y="${R.band + 24}">${sec.no}</text>`;
-    // the number already matches the card, so the second line carries the group
-    if(def && def.group) s += `<text class="fp-name" x="${midX}" y="${R.band + 39}">${eH(def.group)}</text>`;
+    const letter = def ? def.name.replace(/^Table\s+/, '') : tid;
+    s += `<text class="fp-no" x="${midX}" y="${R.band + 26}">${eH(letter)}</text>`;
+    if(def && def.group) s += `<text class="fp-name" x="${midX}" y="${R.band + 41}">${eH(def.group)}</text>`;
     const countCls = over ? 'over' : (taken >= sec.seats ? 'full' : '');
-    s += `<text class="fp-count ${countCls}" x="${midX}" y="${R.band + 53}">`
+    s += `<text class="fp-count ${countCls}" x="${midX}" y="${R.band + 54}">`
       +  `${guests.length}/${sec.seats}${over ? ' · ' + over + ' over' : ''}</text>`;
 
-    // one click target covering the section and both chair rows
+    // one click target covering the table and both chair rows
     s += `<rect class="fp-hit" x="${sec.x}" y="${R.seatTop}" width="${sec.w}" height="${R.seatBot + FP_SEAT_H - R.seatTop}" `
-      +  `onclick="fpSelect(${sec.no})"><title>${eH(def ? def.name : '')} — tap for the guest list</title></rect>`;
+      +  `onclick="fpSelect('${tid}')"><title>${eH(def ? def.name : '')} — tap for the guest list</title></rect>`;
   });
 
   s += `<text class="fp-caption" x="700" y="570" text-anchor="middle">108 seats</text>`;
@@ -1279,16 +1307,13 @@ function renderFpDetail(planSeated, planOver){
     return;
   }
 
-  const sec = fpSections().find(x => x.no === fpSelected);
-  const tid = PLAN_MAP[fpSelected];
+  const sec = fpTables().find(x => x.id === fpSelected);
+  const tid = fpSelected;
   const def = TABLE_DEFS_Y.find(t => t.id === tid);
   const guests = seatData[tid] || [];
+  if(!sec || !def){ box.innerHTML = ''; return; }
 
-  // Names now carry the plan's numbers, so only flag a genuine disagreement.
-  const nameFitsSlot = def && new RegExp(`^Table\\s+${fpSelected}\\b`).test(def.name);
-  let h = `<h4>${def ? eH(def.name) : 'Table ' + fpSelected}`
-    + (nameFitsSlot ? '' : ` <span style="font-size:11px;color:var(--silver);">· sits in plan position ${fpSelected}</span>`)
-    + `</h4>`;
+  let h = `<h4>${eH(def.name)}</h4>`;
   h += `<div style="margin-bottom:8px;font-size:11px;color:var(--silver);">`
     + `${guests.length} of ${sec.seats} seats`
     + (def && def.group ? ` · ${eH(def.group)}` : '')
